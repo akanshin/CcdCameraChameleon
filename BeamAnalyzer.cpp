@@ -205,7 +205,7 @@ bool BeamAnalyzer::analyze() {
 	/** GAUSS FITTING **/
 	tStart = mtime();
 
-	double sigma = std::fmax(8 * sx, 8 * sy);
+	double sigma = std::fmax(4 * sx, 4 * sy);
 
 	std::vector<double> x[4], y[4];
 	bool begin[8] = {false};
