@@ -43,9 +43,23 @@ private:
     Image m_rawImage;
     bool newImage = false;
 
-    float m_frameRate;
 
-    /** The encoded data in PNG from image **/
+
+
+	/** Camera parameters **/
+	double frameRate, frameRateMin, frameRateMax;
+	bool frameRateAuto, frameRateOnOff;
+	double brightness, brightnessMin, brightnessMax;
+	double exposure, exposureMin, exposureMax;
+	bool exposureAuto, exposureOnOff, exposureOnePush;
+	double gamma, gammaMin, gammaMax;
+	bool gammaOnOff;
+	double gain, gainMin, gainMax;
+	bool gainAuto, gainOnePush;
+	double shutter, shutterMin, shutterMax;
+	bool shutterAuto, shutterOnePush;
+
+	/** The encoded data in JPG from image **/
     std::vector<unsigned char>* encodedImage;
     std::vector<unsigned char>* encodedImageExport;
     void imageProcessing();
@@ -59,8 +73,6 @@ private:
     bool b = true;
 
     std::mutex swapMutex;
-
-
 
     int imageWidthExport;
 	int imageHeightExport;
@@ -112,6 +124,8 @@ private:
 	double X, Y;
 	double Phi;
 
+	double amp;
+
 	double scale = 1.0;
 
     int *distribX;
@@ -121,6 +135,18 @@ private:
 
     std::vector<std::string> attrNames;
 
+	/** Program Auto Exposure **/
+
+	bool programAutoExposure = true;
+	double autoExposureValue = 210.0;
+
+	std::vector<double> ampValuesExposure;
+
+	void autoExposure();
+
+	std::mutex attrMutex;
+	std::mutex propMutex;
+
 public:
     /** Constructor. */
     CameraChameleon(int serialNumber);
@@ -129,14 +155,13 @@ public:
     ~CameraChameleon();
 
     void setTangoDeviceClass(TANGO_BASE_CLASS *tc);
-    void setDevicePipeBlobData(Tango::DevicePipeBlob &);
-    void destroyDevicePipeBlobData(Tango::DevicePipeBlob &);
+	void setDevicePipeBlobData(Tango::DevicePipeBlob &);
     /**
      * Start running with the specified serial number.
      *
      * @return Whether the function succeeded.
      */
-    bool Start(int serialNumber);
+	bool start(int serialNumber);
     bool reconnect();
 	bool waitingConnect();
     /**
@@ -144,34 +169,34 @@ public:
      *
      * @return Whether the function succeeded.
      */
-    bool Stop();
-    void Play();
-    void Pause();
+	bool stop();
+	void play();
+	void pause();
 
-    void SetRunStatus(bool);
-    bool GetRunStatus();
+	void setRunStatus(bool);
+	bool getRunStatus();
 
     /** Register all relevant callbacks with the library. */
-    void RegisterCallbacks();
+	void registerCallbacks();
 
     /** Unregister all relevant callbacks with the library. */
-    void UnregisterCallbacks();
+	void unregisterCallbacks();
 
-    void ForcePGRY16Mode();
+	void forcePGRY16Mode();
 
-    void Run();
+	void run();
 
     void setQuality(int quality);
     int getQuality() const;
 
-	void ImageAnalisys(unsigned char *data, int width, int height);
+	void imageAnalisys(unsigned char *data, int width, int height);
 
     /** Get image from camera. */
-    bool GetImage(unsigned char **image, int *size);
-	bool GetBigImage(unsigned char *image, int size, int *width, int* height);
+	bool getImage(unsigned char **image, int *size);
+	bool getBigImage(unsigned char *image, int size, int *width, int* height);
 	void swapBuffers();
-    int GetImageWidth();
-    int GetImageHeight();
+	int getImageWidth();
+	int getImageHeight();
 
 	double getA();
 	double getB();
@@ -186,52 +211,83 @@ public:
     void getDistribY(int** array, int *size);
 
     /** FrameRate functions. */
-    void SetFrameRate(double frameRate);
-    void SetFrameRateAuto(bool a);
-    void SetFrameRateOnOff(bool onOff);
-    double GetFrameRate();
-    bool GetFrameRateAuto();
-    bool GetFrameRateOnOff();
+	void setFrameRate(double frameRate);
+	void setFrameRateAuto(bool a);
+	void setFrameRateOnOff(bool onOff);
+	double getFrameRate();
+	double getFrameRateMin();
+	double getFrameRateMax();
+	bool getFrameRateAuto();
+	bool getFrameRateOnOff();
 
     /** Brightness functions. */
-    void SetBrightness(double brightness);
-    double GetBrightness();
+	void setBrightness(double brightness);
+	double getBrightness();
+	double getBrightnessMin();
+	double getBrightnessMax();
 
     /** Exposure functions. */
-    void SetExposure(double exposure);
-    void SetExposureAuto(bool a);
-    void SetExposureOnOff(bool onOff);
-    void SetExposureOnePush(bool onePush);
-    double GetExposure();
-    bool GetExposureAuto();
-    bool GetExposureOnOff();
-    bool GetExposureOnePush();
+	void setExposure(double exposure);
+	void setExposureAuto(bool a);
+	void setExposureOnOff(bool onOff);
+	void setExposureOnePush(bool onePush);
+	double getExposure();
+	double getExposureMin();
+	double getExposureMax();
+	bool getExposureAuto();
+	bool getExposureOnOff();
+	bool getExposureOnePush();
 
     /** Gamma functions. */
-    void SetGamma(double gamma);
-    void SetGammaOnOff(bool onOff);
-    double GetGamma();
-    bool GetGammaOnOff();
+	void setGamma(double gamma);
+	void setGammaOnOff(bool onOff);
+	double getGamma();
+	double getGammaMin();
+	double getGammaMax();
+	bool getGammaOnOff();
 
 
     /** Shutter functions. */
-    void SetShutter(double shutter);
-    void SetShutterAuto(bool a);
-    void SetShutterOnePush(bool onePush);
-    double GetShutter();
-    bool GetShutterAuto();
-    bool GetShutterOnePush();
+	void setShutter(double shutter);
+	void setShutterAuto(bool a);
+	void setShutterOnePush(bool onePush);
+	double getShutter();
+	double getShutterMin();
+	double getShutterMax();
+	bool getShutterAuto();
+	bool getShutterOnePush();
 
     /** Gain functions. */
-    void SetGain(double gain);
-    void SetGainAuto(bool a);
-    void SetGainOnePush(bool onePush);
-    double GetGain();
-    bool GetGainOnePush();
-    bool GetGainAuto();
+	void setGain(double gain);
+	void setGainAuto(bool a);
+	void setGainOnePush(bool onePush);
+	double getGain();
+	double getGainMin();
+	double getGainMax();
+	bool getGainOnePush();
+	bool getGainAuto();
 
     /** Temperature function. */
-    double GetTemperature();
+	double getTemperature();
+
+	/** Program Auto Exposure **/
+	void setAutoExposure();
+
+	double getAutoExposureValue();
+	void setAutoExposureValue(int val);
+
+/** Private functions **/
+private:
+	/** Get Property funciton **/
+
+	Property getProperty(PropertyType type);
+
+	/** Get PropInfo function **/
+	PropertyInfo getPropertyInfo(PropertyType type);
+
+
+	/** Read all properties and infos function **/
+	void readProperties();
 
 };
 

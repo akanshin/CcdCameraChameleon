@@ -540,6 +540,198 @@ bool CcdCameraChameleon::is_scale_allowed(TANGO_UNUSED(Tango::AttReqType type))
 
 //--------------------------------------------------------
 /**
+ *	Method      : CcdCameraChameleon::is_frameRateMin_allowed()
+ *	Description : Execution allowed for frameRateMin attribute
+ */
+//--------------------------------------------------------
+bool CcdCameraChameleon::is_frameRateMin_allowed(TANGO_UNUSED(Tango::AttReqType type))
+{
+
+	//	Not any excluded states for frameRateMin attribute in read access.
+	/*----- PROTECTED REGION ID(CcdCameraChameleon::frameRateMinStateAllowed_READ) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::frameRateMinStateAllowed_READ
+	return true;
+}
+
+//--------------------------------------------------------
+/**
+ *	Method      : CcdCameraChameleon::is_frameRateMax_allowed()
+ *	Description : Execution allowed for frameRateMax attribute
+ */
+//--------------------------------------------------------
+bool CcdCameraChameleon::is_frameRateMax_allowed(TANGO_UNUSED(Tango::AttReqType type))
+{
+
+	//	Not any excluded states for frameRateMax attribute in read access.
+	/*----- PROTECTED REGION ID(CcdCameraChameleon::frameRateMaxStateAllowed_READ) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::frameRateMaxStateAllowed_READ
+	return true;
+}
+
+//--------------------------------------------------------
+/**
+ *	Method      : CcdCameraChameleon::is_exposureMin_allowed()
+ *	Description : Execution allowed for exposureMin attribute
+ */
+//--------------------------------------------------------
+bool CcdCameraChameleon::is_exposureMin_allowed(TANGO_UNUSED(Tango::AttReqType type))
+{
+
+	//	Not any excluded states for exposureMin attribute in read access.
+	/*----- PROTECTED REGION ID(CcdCameraChameleon::exposureMinStateAllowed_READ) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::exposureMinStateAllowed_READ
+	return true;
+}
+
+//--------------------------------------------------------
+/**
+ *	Method      : CcdCameraChameleon::is_exposureMax_allowed()
+ *	Description : Execution allowed for exposureMax attribute
+ */
+//--------------------------------------------------------
+bool CcdCameraChameleon::is_exposureMax_allowed(TANGO_UNUSED(Tango::AttReqType type))
+{
+
+	//	Not any excluded states for exposureMax attribute in read access.
+	/*----- PROTECTED REGION ID(CcdCameraChameleon::exposureMaxStateAllowed_READ) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::exposureMaxStateAllowed_READ
+	return true;
+}
+
+//--------------------------------------------------------
+/**
+ *	Method      : CcdCameraChameleon::is_brightnessMin_allowed()
+ *	Description : Execution allowed for brightnessMin attribute
+ */
+//--------------------------------------------------------
+bool CcdCameraChameleon::is_brightnessMin_allowed(TANGO_UNUSED(Tango::AttReqType type))
+{
+
+	//	Not any excluded states for brightnessMin attribute in read access.
+	/*----- PROTECTED REGION ID(CcdCameraChameleon::brightnessMinStateAllowed_READ) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::brightnessMinStateAllowed_READ
+	return true;
+}
+
+//--------------------------------------------------------
+/**
+ *	Method      : CcdCameraChameleon::is_brightnessMax_allowed()
+ *	Description : Execution allowed for brightnessMax attribute
+ */
+//--------------------------------------------------------
+bool CcdCameraChameleon::is_brightnessMax_allowed(TANGO_UNUSED(Tango::AttReqType type))
+{
+
+	//	Not any excluded states for brightnessMax attribute in read access.
+	/*----- PROTECTED REGION ID(CcdCameraChameleon::brightnessMaxStateAllowed_READ) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::brightnessMaxStateAllowed_READ
+	return true;
+}
+
+//--------------------------------------------------------
+/**
+ *	Method      : CcdCameraChameleon::is_gammaMin_allowed()
+ *	Description : Execution allowed for gammaMin attribute
+ */
+//--------------------------------------------------------
+bool CcdCameraChameleon::is_gammaMin_allowed(TANGO_UNUSED(Tango::AttReqType type))
+{
+
+	//	Not any excluded states for gammaMin attribute in read access.
+	/*----- PROTECTED REGION ID(CcdCameraChameleon::gammaMinStateAllowed_READ) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::gammaMinStateAllowed_READ
+	return true;
+}
+
+//--------------------------------------------------------
+/**
+ *	Method      : CcdCameraChameleon::is_gammaMax_allowed()
+ *	Description : Execution allowed for gammaMax attribute
+ */
+//--------------------------------------------------------
+bool CcdCameraChameleon::is_gammaMax_allowed(TANGO_UNUSED(Tango::AttReqType type))
+{
+
+	//	Not any excluded states for gammaMax attribute in read access.
+	/*----- PROTECTED REGION ID(CcdCameraChameleon::gammaMaxStateAllowed_READ) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::gammaMaxStateAllowed_READ
+	return true;
+}
+
+//--------------------------------------------------------
+/**
+ *	Method      : CcdCameraChameleon::is_gainMin_allowed()
+ *	Description : Execution allowed for gainMin attribute
+ */
+//--------------------------------------------------------
+bool CcdCameraChameleon::is_gainMin_allowed(TANGO_UNUSED(Tango::AttReqType type))
+{
+
+	//	Not any excluded states for gainMin attribute in read access.
+	/*----- PROTECTED REGION ID(CcdCameraChameleon::gainMinStateAllowed_READ) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::gainMinStateAllowed_READ
+	return true;
+}
+
+//--------------------------------------------------------
+/**
+ *	Method      : CcdCameraChameleon::is_gainMax_allowed()
+ *	Description : Execution allowed for gainMax attribute
+ */
+//--------------------------------------------------------
+bool CcdCameraChameleon::is_gainMax_allowed(TANGO_UNUSED(Tango::AttReqType type))
+{
+
+	//	Not any excluded states for gainMax attribute in read access.
+	/*----- PROTECTED REGION ID(CcdCameraChameleon::gainMaxStateAllowed_READ) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::gainMaxStateAllowed_READ
+	return true;
+}
+
+//--------------------------------------------------------
+/**
+ *	Method      : CcdCameraChameleon::is_shutterMin_allowed()
+ *	Description : Execution allowed for shutterMin attribute
+ */
+//--------------------------------------------------------
+bool CcdCameraChameleon::is_shutterMin_allowed(TANGO_UNUSED(Tango::AttReqType type))
+{
+
+	//	Not any excluded states for shutterMin attribute in read access.
+	/*----- PROTECTED REGION ID(CcdCameraChameleon::shutterMinStateAllowed_READ) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::shutterMinStateAllowed_READ
+	return true;
+}
+
+//--------------------------------------------------------
+/**
+ *	Method      : CcdCameraChameleon::is_shutterMax_allowed()
+ *	Description : Execution allowed for shutterMax attribute
+ */
+//--------------------------------------------------------
+bool CcdCameraChameleon::is_shutterMax_allowed(TANGO_UNUSED(Tango::AttReqType type))
+{
+
+	//	Not any excluded states for shutterMax attribute in read access.
+	/*----- PROTECTED REGION ID(CcdCameraChameleon::shutterMaxStateAllowed_READ) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::shutterMaxStateAllowed_READ
+	return true;
+}
+
+//--------------------------------------------------------
+/**
  *	Method      : CcdCameraChameleon::is_imageEncodedJpeg_allowed()
  *	Description : Execution allowed for imageEncodedJpeg attribute
  */
@@ -602,6 +794,21 @@ bool CcdCameraChameleon::is_pause_allowed(TANGO_UNUSED(const CORBA::Any &any))
 	/*----- PROTECTED REGION ID(CcdCameraChameleon::pauseStateAllowed) ENABLED START -----*/
 	
 	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::pauseStateAllowed
+	return true;
+}
+
+//--------------------------------------------------------
+/**
+ *	Method      : CcdCameraChameleon::is_setExposure_allowed()
+ *	Description : Execution allowed for setExposure attribute
+ */
+//--------------------------------------------------------
+bool CcdCameraChameleon::is_setExposure_allowed(TANGO_UNUSED(const CORBA::Any &any))
+{
+	//	Not any excluded states for setExposure command.
+	/*----- PROTECTED REGION ID(CcdCameraChameleon::setExposureStateAllowed) ENABLED START -----*/
+	
+	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::setExposureStateAllowed
 	return true;
 }
 

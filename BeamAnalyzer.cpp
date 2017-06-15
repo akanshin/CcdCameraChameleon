@@ -63,7 +63,6 @@ BeamAnalyzer::~BeamAnalyzer() {
 
 void BeamAnalyzer::beamCheckFunciton(bool *result) {
 	*result = false;
-	//int min, max;
 	int av = getAverage(data, width * height) + 20;
 	vector<vector<Point> > contours;
 	Mat image(height, width, CV_8UC1, data);
@@ -78,9 +77,7 @@ void BeamAnalyzer::beamCheckFunciton(bool *result) {
 }
 
 bool BeamAnalyzer::analyze() {
-//	cout << "-> analyze()" << endl;
 	if (data == 0) {
-		cout << " data == 0 ";
 		return false;
 	}
 
@@ -95,10 +92,6 @@ bool BeamAnalyzer::analyze() {
 	tEnd = mtime();
 	medianTime = tEnd - tStart;
 
-//	bool check;
-//	std::thread checkThread(&BeamAnalyzer::beamCheckFunciton, this, &check);
-
-//	cout << "-> PLANE()" << endl;
 	/** PLANE EVALUATING **/
 	tStart = mtime();
 	FuncPoint p1;
@@ -157,22 +150,14 @@ bool BeamAnalyzer::analyze() {
 	tEnd = mtime();
 	linearEvaluationTime = tEnd - tStart;
 
-
-
-//	cout << "-> CENTER()" << endl;
 	/** CENTER MASS **/
 	tStart = mtime();
-
-//	time1 = mtime();
 
 	distributionX = new int[width];
 	distributionY = new int[height];
 
 	memset(distributionX, 0, width * sizeof(int));
 	memset(distributionY, 0, height * sizeof(int));
-
-//	time2 = mtime();
-//	time1=time2 - time1;
 
 	for (int i = 0; i < height; ++i) {
 		int shift = width * i;
@@ -189,29 +174,13 @@ bool BeamAnalyzer::analyze() {
 		}
 	}
 
-//	time3 = mtime();
-//	time2=time3 - time2;
-
-//	cout << "3" << endl;
-//	subAverage((int*)distributionX, width);
-//	subAverage((int*)distributionY, height);
-
 	std::thread thread0_1(&BeamAnalyzer::subHalf, this, (int*)distributionX, width);
 	std::thread thread0_2(&BeamAnalyzer::subHalf, this, (int*)distributionY, height);
 
 	thread0_1.join();
 	thread0_2.join();
 
-//	time4 = mtime();
-//	time3 = time4 - time3;
-
-//	cout << "4" << endl;
 	double sx, sy;
-
-//	getCenterMass((int*)distributionX, width, &gaussCenterX);
-//	getCenterMass((int*)distributionY, height, &gaussCenterY);
-//	getSigma((int*)distributionX, width, &sx);
-//	getSigma((int*)distributionY, height, &sy);
 
 	std::thread thread1(&BeamAnalyzer::getCenterMass, this, (int*)distributionX, width, &gaussCenterX);
 	std::thread thread2(&BeamAnalyzer::getCenterMass, this, (int*)distributionY, height, &gaussCenterY);
@@ -221,11 +190,6 @@ bool BeamAnalyzer::analyze() {
 	thread2.join();
 	thread3.join();
 	thread4.join();
-
-//	time5 = mtime();
-//	time4 = time5 - time4;
-
-//	cout << "sx = " << sx << "    sy = " << sy << endl;
 
 	int imSize = std::min(width, height);
 
@@ -238,11 +202,6 @@ bool BeamAnalyzer::analyze() {
 	tEnd = mtime();
 	centerMassTime = tEnd - tStart;
 
-//	checkThread.join();
-//	if (!check)
-//		return false;
-
-//	cout << "-> GAUSS()" << endl;
 	/** GAUSS FITTING **/
 	tStart = mtime();
 
@@ -255,7 +214,6 @@ bool BeamAnalyzer::analyze() {
 	c = getPixel(data, width, height, gaussCenterX, gaussCenterY);
 	int cx = gaussCenterX;
 	int cy = gaussCenterY;
-	gaussAmplitude = c;
 
 	if (c < 255) {
 		x[0].push_back(0);
@@ -272,13 +230,11 @@ bool BeamAnalyzer::analyze() {
 	int diff_lim = 20;
 
 	for (int i = 1; i < (int)sigma; i++) {
-//----------------------------------------------------------------------------------
 		c = (int)getPixel(data, width, height, cx + i, cy);
 		if (!begin[0]) {
 			cc = (int)getPixel(data, width, height, cx + i + diff_lim, cy);
 			if ((int)(c - cc) > 0) {
 				begin[0] = true;
-//				cout << "begin 1+" << endl;
 			}
 		}
 		if (begin[0] && cx + i < width) {
@@ -294,7 +250,6 @@ bool BeamAnalyzer::analyze() {
 			cc = (int)getPixel(data, width, height, cx - i - diff_lim, cy);
 			if ((int)(c - cc) > 0) {
 				begin[1] = true;
-//				cout << "begin 1-" << endl;
 			}
 		}
 		if (begin[1] && cx - i >= 0) {
@@ -304,13 +259,11 @@ bool BeamAnalyzer::analyze() {
 			x[0].push_back(-(double)i);
 			y[0].push_back((double)c / 3.0);
 		}
-//-----------------------------------------------------------------------------------
 		c = (int)getPixel(data, width, height, cx, cy + i);
 		if (!begin[2]) {
 			cc = (int)getPixel(data, width, height, cx, cy + i + diff_lim);
 			if ((int)(c - cc) > 0) {
 				begin[2] = true;
-//				cout << "begin 2+" << endl;
 			}
 		}
 		if (begin[2] && cy + i < height) {
@@ -326,7 +279,6 @@ bool BeamAnalyzer::analyze() {
 			cc = (int)getPixel(data, width, height, cx, cy - i - diff_lim);
 			if ((int)(c - cc) > 0) {
 				begin[3] = true;
-//				cout << "begin 2-" << endl;
 			}
 		}
 		if (begin[3] && cy - i >= 0) {
@@ -342,7 +294,6 @@ bool BeamAnalyzer::analyze() {
 			cc = (int)getPixel(data, width, height, cx + i + diff_lim, cy + i + diff_lim);
 			if ((int)(c - cc) > 0) {
 				begin[4] = true;
-//				cout << "begin 3+" << endl;
 			}
 		}
 		if (begin[4] && cx + i < width && cy + i < height) {
@@ -358,7 +309,6 @@ bool BeamAnalyzer::analyze() {
 			cc = (int)getPixel(data, width, height, cx - i - diff_lim, cy - i - diff_lim);
 			if ((int)(c - cc) > 0) {
 				begin[5] = true;
-//				cout << "begin 3-" << endl;
 			}
 		}
 		if (begin[5] && cx - i >= 0 && cy - i >= 0) {
@@ -374,7 +324,6 @@ bool BeamAnalyzer::analyze() {
 			cc = (int)getPixel(data, width, height, cx + i + diff_lim, cy - i - diff_lim);
 			if ((int)(c - cc) > 0) {
 				begin[6] = true;
-//				cout << "begin 4+" << endl;
 			}
 		}
 		if (begin[6] && cx + i < width && cy - i >= 0) {
@@ -390,7 +339,6 @@ bool BeamAnalyzer::analyze() {
 			cc = (int)getPixel(data, width, height, cx - i - diff_lim, cy + i + diff_lim);
 			if ((int)(c - cc) > 0) {
 				begin[7] = true;
-//				cout << "begin 4-" << endl;
 			}
 		}
 		if (begin[7] && cx - i >= 0 && cy + i < height) {
@@ -402,7 +350,6 @@ bool BeamAnalyzer::analyze() {
 		}
 	}
 	if (y[0].size() < 4 || y[1].size() < 4 || y[2].size() < 4 || y[3].size() < 4) {
-//		cout << "size < 4 %%%%%%%%%%%%%%%%%%%%%%%%%%%% sigma = " << sigma << endl;
 		tEnd = mtime();
 		gaussFittingTime = tEnd - tStart;
 		return false;
@@ -423,10 +370,15 @@ bool BeamAnalyzer::analyze() {
 	thread7.join();
 	thread8.join();
 
+	gaussAmplitude = ampValues[0];
+	gaussAmplitude += ampValues[1];
+	gaussAmplitude += ampValues[2];
+	gaussAmplitude += ampValues[3];
+	gaussAmplitude /= 4.0;
+
 	tEnd = mtime();
 	gaussFittingTime = tEnd - tStart;
 
-//	cout << "-> ELLIPSE()" << endl;
 	/** FIT ELLIPSE **/
 	tStart = mtime();
 
@@ -471,8 +423,6 @@ bool BeamAnalyzer::analyze() {
 
 	fitEllipseTime = tEnd - tStart;
 	fullTime = tEndFull - tStartFull;
-
-//	cout << "<- analyze()" << endl;
 
 	return true;
 }

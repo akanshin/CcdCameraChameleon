@@ -433,6 +433,162 @@ public:
 		{return (static_cast<CcdCameraChameleon *>(dev))->is_scale_allowed(ty);}
 };
 
+//	Attribute frameRateMin class definition
+class frameRateMinAttrib: public Tango::Attr
+{
+public:
+	frameRateMinAttrib():Attr("frameRateMin",
+			Tango::DEV_DOUBLE, Tango::READ) {};
+	~frameRateMinAttrib() {};
+	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
+		{(static_cast<CcdCameraChameleon *>(dev))->read_frameRateMin(att);}
+	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
+		{return (static_cast<CcdCameraChameleon *>(dev))->is_frameRateMin_allowed(ty);}
+};
+
+//	Attribute frameRateMax class definition
+class frameRateMaxAttrib: public Tango::Attr
+{
+public:
+	frameRateMaxAttrib():Attr("frameRateMax",
+			Tango::DEV_DOUBLE, Tango::READ) {};
+	~frameRateMaxAttrib() {};
+	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
+		{(static_cast<CcdCameraChameleon *>(dev))->read_frameRateMax(att);}
+	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
+		{return (static_cast<CcdCameraChameleon *>(dev))->is_frameRateMax_allowed(ty);}
+};
+
+//	Attribute exposureMin class definition
+class exposureMinAttrib: public Tango::Attr
+{
+public:
+	exposureMinAttrib():Attr("exposureMin",
+			Tango::DEV_DOUBLE, Tango::READ) {};
+	~exposureMinAttrib() {};
+	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
+		{(static_cast<CcdCameraChameleon *>(dev))->read_exposureMin(att);}
+	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
+		{return (static_cast<CcdCameraChameleon *>(dev))->is_exposureMin_allowed(ty);}
+};
+
+//	Attribute exposureMax class definition
+class exposureMaxAttrib: public Tango::Attr
+{
+public:
+	exposureMaxAttrib():Attr("exposureMax",
+			Tango::DEV_DOUBLE, Tango::READ) {};
+	~exposureMaxAttrib() {};
+	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
+		{(static_cast<CcdCameraChameleon *>(dev))->read_exposureMax(att);}
+	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
+		{return (static_cast<CcdCameraChameleon *>(dev))->is_exposureMax_allowed(ty);}
+};
+
+//	Attribute brightnessMin class definition
+class brightnessMinAttrib: public Tango::Attr
+{
+public:
+	brightnessMinAttrib():Attr("brightnessMin",
+			Tango::DEV_DOUBLE, Tango::READ) {};
+	~brightnessMinAttrib() {};
+	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
+		{(static_cast<CcdCameraChameleon *>(dev))->read_brightnessMin(att);}
+	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
+		{return (static_cast<CcdCameraChameleon *>(dev))->is_brightnessMin_allowed(ty);}
+};
+
+//	Attribute brightnessMax class definition
+class brightnessMaxAttrib: public Tango::Attr
+{
+public:
+	brightnessMaxAttrib():Attr("brightnessMax",
+			Tango::DEV_DOUBLE, Tango::READ) {};
+	~brightnessMaxAttrib() {};
+	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
+		{(static_cast<CcdCameraChameleon *>(dev))->read_brightnessMax(att);}
+	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
+		{return (static_cast<CcdCameraChameleon *>(dev))->is_brightnessMax_allowed(ty);}
+};
+
+//	Attribute gammaMin class definition
+class gammaMinAttrib: public Tango::Attr
+{
+public:
+	gammaMinAttrib():Attr("gammaMin",
+			Tango::DEV_DOUBLE, Tango::READ) {};
+	~gammaMinAttrib() {};
+	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
+		{(static_cast<CcdCameraChameleon *>(dev))->read_gammaMin(att);}
+	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
+		{return (static_cast<CcdCameraChameleon *>(dev))->is_gammaMin_allowed(ty);}
+};
+
+//	Attribute gammaMax class definition
+class gammaMaxAttrib: public Tango::Attr
+{
+public:
+	gammaMaxAttrib():Attr("gammaMax",
+			Tango::DEV_DOUBLE, Tango::READ) {};
+	~gammaMaxAttrib() {};
+	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
+		{(static_cast<CcdCameraChameleon *>(dev))->read_gammaMax(att);}
+	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
+		{return (static_cast<CcdCameraChameleon *>(dev))->is_gammaMax_allowed(ty);}
+};
+
+//	Attribute gainMin class definition
+class gainMinAttrib: public Tango::Attr
+{
+public:
+	gainMinAttrib():Attr("gainMin",
+			Tango::DEV_DOUBLE, Tango::READ) {};
+	~gainMinAttrib() {};
+	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
+		{(static_cast<CcdCameraChameleon *>(dev))->read_gainMin(att);}
+	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
+		{return (static_cast<CcdCameraChameleon *>(dev))->is_gainMin_allowed(ty);}
+};
+
+//	Attribute gainMax class definition
+class gainMaxAttrib: public Tango::Attr
+{
+public:
+	gainMaxAttrib():Attr("gainMax",
+			Tango::DEV_DOUBLE, Tango::READ) {};
+	~gainMaxAttrib() {};
+	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
+		{(static_cast<CcdCameraChameleon *>(dev))->read_gainMax(att);}
+	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
+		{return (static_cast<CcdCameraChameleon *>(dev))->is_gainMax_allowed(ty);}
+};
+
+//	Attribute shutterMin class definition
+class shutterMinAttrib: public Tango::Attr
+{
+public:
+	shutterMinAttrib():Attr("shutterMin",
+			Tango::DEV_DOUBLE, Tango::READ) {};
+	~shutterMinAttrib() {};
+	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
+		{(static_cast<CcdCameraChameleon *>(dev))->read_shutterMin(att);}
+	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
+		{return (static_cast<CcdCameraChameleon *>(dev))->is_shutterMin_allowed(ty);}
+};
+
+//	Attribute shutterMax class definition
+class shutterMaxAttrib: public Tango::Attr
+{
+public:
+	shutterMaxAttrib():Attr("shutterMax",
+			Tango::DEV_DOUBLE, Tango::READ) {};
+	~shutterMaxAttrib() {};
+	virtual void read(Tango::DeviceImpl *dev,Tango::Attribute &att)
+		{(static_cast<CcdCameraChameleon *>(dev))->read_shutterMax(att);}
+	virtual bool is_allowed(Tango::DeviceImpl *dev,Tango::AttReqType ty)
+		{return (static_cast<CcdCameraChameleon *>(dev))->is_shutterMax_allowed(ty);}
+};
+
 //	Attribute imageEncodedJpeg class definition
 class imageEncodedJpegAttrib: public Tango::SpectrumAttr
 {
@@ -507,6 +663,29 @@ public:
 	virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
 	virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
 	{return (static_cast<CcdCameraChameleon *>(dev))->is_pause_allowed(any);}
+};
+
+//	Command setExposure class definition
+class setExposureClass : public Tango::Command
+{
+public:
+	setExposureClass(const char   *name,
+	               Tango::CmdArgType in,
+				   Tango::CmdArgType out,
+				   const char        *in_desc,
+				   const char        *out_desc,
+				   Tango::DispLevel  level)
+	:Command(name,in,out,in_desc,out_desc, level)	{};
+
+	setExposureClass(const char   *name,
+	               Tango::CmdArgType in,
+				   Tango::CmdArgType out)
+	:Command(name,in,out)	{};
+	~setExposureClass() {};
+	
+	virtual CORBA::Any *execute (Tango::DeviceImpl *dev, const CORBA::Any &any);
+	virtual bool is_allowed (Tango::DeviceImpl *dev, const CORBA::Any &any)
+	{return (static_cast<CcdCameraChameleon *>(dev))->is_setExposure_allowed(any);}
 };
 
 

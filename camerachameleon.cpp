@@ -29,7 +29,7 @@ CameraChameleon::CameraChameleon(int serialNumber)
 
     this->serialNumber = serialNumber;
 
-    Start(serialNumber);
+	start(serialNumber);
 
 
     imageMutex = new mutex();
@@ -44,7 +44,7 @@ CameraChameleon::CameraChameleon(int serialNumber)
     distribX = new int[1280];
     distribY = new int[960];
 
-    getImageThread = new thread(&CameraChameleon::Run, this);
+	getImageThread = new thread(&CameraChameleon::run, this);
 }
 
 CameraChameleon::~CameraChameleon() {
@@ -60,7 +60,7 @@ CameraChameleon::~CameraChameleon() {
     }
 }
 
-void CameraChameleon::ForcePGRY16Mode() {
+void CameraChameleon::forcePGRY16Mode() {
     Error error;
     const unsigned int k_imageDataFmtReg = 0x1048;
     unsigned int value = 0;
@@ -79,7 +79,7 @@ void CameraChameleon::ForcePGRY16Mode() {
     }
 }
 
-bool CameraChameleon::Start(int serialNumber) {
+bool CameraChameleon::start(int serialNumber) {
 
     Error error;
     this->serialNumber = serialNumber;
@@ -113,7 +113,7 @@ bool CameraChameleon::Start(int serialNumber) {
     }
 
     // Force the camera to PGR's Y16 endianness
-    ForcePGRY16Mode();
+	forcePGRY16Mode();
 
     // Get the camera info and print it out
     error = m_pCamera->GetCameraInfo( &m_camInfo );
@@ -154,43 +154,20 @@ bool CameraChameleon::Start(int serialNumber) {
         return false;
     }
 
-    SetRunStatus(true);
+	setRunStatus(true);
 
     return true;
 }
 
-//bool CameraChameleon::Start(int serialNumber) {
-//	PGRGuid guid;
-//	error = m_busMgr.GetCameraFromSerialNumber(serialNumber, &guid);
-//	if ( error != PGRERROR_OK ) {
-//		return false;
-//	}
-//	m_pCamera = new Camera();
-//	error = m_pCamera->Connect( &guid );
-//	if ( error != PGRERROR_OK ) {
-//		cout << "Failed to connect to camera" << endl;
-//		return false;
-//	}
-//	error = m_pCamera->StartCapture();
-//	if ( error != PGRERROR_OK ) {
-//		cout << "Failed to start image capture" << endl;
-//		Camera* tmp = m_pCamera;
-//		m_pCamera = NULL;
-//		delete tmp;
-//		return false;
-//	}
-//	return true;
-//}
-
 bool CameraChameleon::reconnect() {
-    SetRunStatus(false);
+	setRunStatus(false);
     imageMutex->lock();
     m_cameraPaused = true;
     imageMutex->unlock();
 	std::cout << "Reconnecting";
     std::cout.flush();
     int i = 0;
-    while (!Start(serialNumber)) {
+	while (!start(serialNumber)) {
         sleep(1);
         std::cout << ".";
         std::cout.flush();
@@ -204,13 +181,13 @@ bool CameraChameleon::reconnect() {
 }
 
 bool CameraChameleon::waitingConnect() {
-	SetRunStatus(false);
+	setRunStatus(false);
 	imageMutex->lock();
 	m_cameraPaused = true;
 	imageMutex->unlock();
 	std::cout << "Waiting for connection\n";
 	std::cout.flush();
-	while (!Start(serialNumber)) {
+	while (!start(serialNumber)) {
 		sleep(1);
 	}
 	imageMutex->lock();
@@ -220,13 +197,13 @@ bool CameraChameleon::waitingConnect() {
 	return true;
 }
 
-bool CameraChameleon::Stop() {
+bool CameraChameleon::stop() {
     imageMutex->lock();
-    if( GetRunStatus() != true ) {
+	if( getRunStatus() != true ) {
         return false;
     }
 
-    SetRunStatus(false);
+	setRunStatus(false);
 
     // Stop the image capture
     Error error;
@@ -242,41 +219,29 @@ bool CameraChameleon::Stop() {
     return true;
 }
 
-//bool CameraChameleon::Stop() {
-//	error = m_pCamera->StopCapture();
-//	if ( error != PGRERROR_OK ) {
-//		cout << "Failed to stop capture" << endl;
-//	}
-//	error = m_pCamera->Disconnect();
-//	if ( error != PGRERROR_OK ) {
-//		cout << "Failed to disconnect" << endl;
-//	}
-//	return true;
-//}
-
-void CameraChameleon::Play() {
-    if (!this->GetRunStatus()) {
-        this->Start(this->serialNumber);
+void CameraChameleon::play() {
+	if (!this->getRunStatus()) {
+		this->start(this->serialNumber);
         playMutex.unlock();
         m_cameraPaused = false;
     }
 }
-void CameraChameleon::Pause() {
-    if (this->GetRunStatus()) {
+void CameraChameleon::pause() {
+	if (this->getRunStatus()) {
         playMutex.lock();
-        this->Stop();
+		this->stop();
         m_cameraPaused = true;
     }
 }
 
-void CameraChameleon::SetRunStatus(bool runStatus) {
+void CameraChameleon::setRunStatus(bool runStatus) {
     m_run = runStatus;
 }
-bool CameraChameleon::GetRunStatus() {
+bool CameraChameleon::getRunStatus() {
     return m_run;
 }
 
-bool CameraChameleon::GetImage(unsigned char** image, int* size) {
+bool CameraChameleon::getImage(unsigned char** image, int* size) {
 
     //newImageMutex.lock();
 
@@ -294,7 +259,7 @@ bool CameraChameleon::GetImage(unsigned char** image, int* size) {
     return true;
 }
 
-bool CameraChameleon::GetBigImage(unsigned char *image, int size, int *width, int* height) {
+bool CameraChameleon::getBigImage(unsigned char *image, int size, int *width, int* height) {
 	if (image == NULL || size <= 0)
 		return false;
 	imageMutex->lock();
@@ -325,7 +290,7 @@ void CameraChameleon::swapBuffers() {
     swapMutex.unlock();
 }
 
-int CameraChameleon::GetImageWidth() {
+int CameraChameleon::getImageWidth() {
     int result;
     swapMutex.lock();
     if(m_cameraPaused) {
@@ -337,7 +302,7 @@ int CameraChameleon::GetImageWidth() {
     return result;
 }
 
-int CameraChameleon::GetImageHeight() {
+int CameraChameleon::getImageHeight() {
     int result;
     swapMutex.lock();
     if(m_cameraPaused) {
@@ -351,10 +316,10 @@ int CameraChameleon::GetImageHeight() {
 
 
 
-void CameraChameleon::Run() {
-    long long t1, t2;
-    t1 = mtime();
-    t2 = t1;
+void CameraChameleon::run() {
+//    long long t1, t2;
+//    t1 = mtime();
+//    t2 = t1;
     while (true) {
 		playMutex.lock();
 
@@ -363,6 +328,8 @@ void CameraChameleon::Run() {
 		}
 
         std::thread processing(&CameraChameleon::imageProcessing, this);
+
+		this->readProperties();
 
         Image tempImage;
         Error error = m_pCamera->RetrieveBuffer( &tempImage );
@@ -387,6 +354,10 @@ void CameraChameleon::Run() {
 
 		processing.join();
 
+		if (programAutoExposure) {
+			this->autoExposure();
+		}
+
 		imageMutex->lock();
         m_rawImage = tempImage;
         newImage = true;
@@ -394,22 +365,11 @@ void CameraChameleon::Run() {
 
         playMutex.unlock();
 
-        t1 = mtime();
-        float fps = 1000.0 / (float)(t1-t2);
-		//cout << fps << endl;
-        t2 = t1;
+//        t1 = mtime();
+//        float fps = 1000.0 / (float)(t1-t2);
+//        t2 = t1;
     }
 }
-
-//void CameraChameleon::Run() {
-
-//        Image tempImage;
-//        Error error = m_pCamera->RetrieveBuffer( &tempImage );
-//        if ( error != PGRERROR_OK ) {
-//            cout << "Failed to get image" << endl;
-//        }
-
-//}
 
 void CameraChameleon::setQuality(int quality) {
     imageMutex->lock();
@@ -421,54 +381,9 @@ int CameraChameleon::getQuality() const {
     return quality;
 }
 
-
-int decodeJpeg(unsigned char *src, unsigned long src_size, unsigned char **buffer, int *size, int *width, int *height) {
-    struct jpeg_decompress_struct cinfo;
-    struct jpeg_error_mgr jerr;
-
-    int pixel_size;
-
-    cinfo.err = jpeg_std_error(&jerr);
-    jpeg_create_decompress(&cinfo);
-    jpeg_mem_src(&cinfo, src, src_size);
-
-    (void)jpeg_read_header(&cinfo, TRUE);
-
-    //cinfo.output_width = 1280;
-    //cinfo.output_height = 960;
-    //cinfo.output_components = 1;
-    //cinfo.out_color_space = JCS_GRAYSCALE;
-
-
-    jpeg_start_decompress(&cinfo);
-
-    *width = cinfo.output_width;
-    *height = cinfo.output_height;
-    pixel_size = cinfo.output_components;
-
-    *size = *width * *height * pixel_size;
-    *buffer = new unsigned char[*size];
-
-    int row_stride = cinfo.output_width * cinfo.output_components;
-
-    while (cinfo.output_scanline < cinfo.output_height) {
-        unsigned char *buffer_array[1];
-        buffer_array[0] = *buffer + (cinfo.output_scanline) * row_stride;
-
-        jpeg_read_scanlines(&cinfo, buffer_array, 1);
-    }
-
-    jpeg_finish_decompress(&cinfo);
-    jpeg_destroy_decompress(&cinfo);
-
-    return 0;
-}
-
 void CameraChameleon::imageProcessing() {
-//	cout << "-> imageProcessing()" << endl;
 
-    if (m_rawImage.GetCols() == 0 || m_rawImage.GetRows() == 0) {
-//		cout << "<- imageProcessing()" << endl;
+	if (m_rawImage.GetCols() == 0 || m_rawImage.GetRows() == 0) {
         return;
     }
 
@@ -481,7 +396,7 @@ void CameraChameleon::imageProcessing() {
 	unsigned char * copy = new unsigned char[m_rawImage.GetDataSize()];
 	memcpy(copy, m_rawImage.GetData(), m_rawImage.GetDataSize());
 
-	std::thread analyseThread(&CameraChameleon::ImageAnalisys, this,
+	std::thread analyseThread(&CameraChameleon::imageAnalisys, this,
 							  m_rawImage.GetData(),
 							  m_rawImage.GetCols(),
 							  m_rawImage.GetRows());
@@ -495,8 +410,6 @@ void CameraChameleon::imageProcessing() {
 	encodingThread.join();
 
 	delete[] copy;
-
-//	cout << "join()" << endl;
 
     if (tangoClass != NULL) {
         try {
@@ -512,8 +425,7 @@ void CameraChameleon::imageProcessing() {
         }
     }
 
-    swapBuffers();
-//	cout << "<- imageProcessing()" << endl;
+	swapBuffers();
     return;
 }
 
@@ -580,11 +492,7 @@ void CameraChameleon::encoding(unsigned char *in_data, int in_width, int in_heig
 	delete[] scaled;
 }
 
-void CameraChameleon::destroyDevicePipeBlobData(Tango::DevicePipeBlob & p_data) {
-
-}
-
-void CameraChameleon::ImageAnalisys(unsigned char *data, int width, int height){
+void CameraChameleon::imageAnalisys(unsigned char *data, int width, int height){
 //	cout << "-> ImageAnalisys()" << endl;
     analisysMutex.lock();
 
@@ -593,6 +501,7 @@ void CameraChameleon::ImageAnalisys(unsigned char *data, int width, int height){
 	X = 0;
 	Y = 0;
 	Phi = 0;
+	amp = 0;
 
 	BeamAnalyzer beam(data, width, height);
 	bool result = beam.analyze();
@@ -605,6 +514,7 @@ void CameraChameleon::ImageAnalisys(unsigned char *data, int width, int height){
 		X = beam.getGaussCenterX();
 		Y = beam.getGaussCenterY();
 		Phi = beam.getGaussAngle();
+		amp = beam.getGaussAmplitude();
 	}
 
     analisysMutex.unlock();
@@ -670,14 +580,14 @@ double CameraChameleon::getPhi() {
 }
 
 /** FrameRate functions. */
-void CameraChameleon::SetFrameRate(double frameRate) {
-    if (m_cameraPaused)
-        return;
+void CameraChameleon::setFrameRate(double frameRate) {
+	attrMutex.lock();
     Property prop;
     prop.type = FRAME_RATE;
     Error error = m_pCamera->GetProperty(&prop);
     if (error == PGRERROR_PROPERTY_FAILED) {
         cout << "Failed to get frame rate property" << endl;
+		attrMutex.unlock();
         return;
     }
 
@@ -686,68 +596,39 @@ void CameraChameleon::SetFrameRate(double frameRate) {
     error = m_pCamera->SetProperty(&prop);
     if (error == PGRERROR_PROPERTY_FAILED) {
         cout << "Failed to set frame rate property" << endl;
-    }
+	}
+	attrMutex.unlock();
 }
 
-//void CameraChameleon::SetFrameRate(double frameRate) {
-//	Property prop;
-//	prop.type = FRAME_RATE;
-//	Error error = m_pCamera->GetProperty(&prop);
-//	if (error == PGRERROR_PROPERTY_FAILED) {
-//		cout << "Failed to get frame rate property" << endl;
-//		return;
-//	}
-//	prop.absValue = (float)frameRate;
-//	error = m_pCamera->SetProperty(&prop);
-//	if (error == PGRERROR_PROPERTY_FAILED) {
-//		cout << "Failed to set frame rate property" << endl;
-//	}
-//}
 
-void CameraChameleon::SetFrameRateAuto(bool a) {
-    if (m_cameraPaused)
-        return;
+void CameraChameleon::setFrameRateAuto(bool a) {
+	attrMutex.lock();
     Property prop;
     prop.type = FRAME_RATE;
     Error error = m_pCamera->GetProperty(&prop);
     if (error == PGRERROR_PROPERTY_FAILED) {
         cout << "Failed to get frame rate property" << endl;
+		attrMutex.unlock();
         return;
     }
 
-    prop.absControl = !a;
     prop.autoManualMode = a;
 
     error = m_pCamera->SetProperty(&prop);
     if (error == PGRERROR_PROPERTY_FAILED) {
         cout << "Failed to set frame rate property" << endl;
     }
+	attrMutex.unlock();
 }
 
-//void CameraChameleon::SetFrameRateAuto(bool a) {
-//	Property prop;
-//	prop.type = FRAME_RATE;
-//	Error error = m_pCamera->GetProperty(&prop);
-//	if (error == PGRERROR_PROPERTY_FAILED) {
-//		cout << "Failed to get frame rate property" << endl;
-//		return;
-//	}
-//	prop.absControl = !a;
-//	prop.autoManualMode = a;
-//	error = m_pCamera->SetProperty(&prop);
-//	if (error == PGRERROR_PROPERTY_FAILED) {
-//		cout << "Failed to set frame rate property" << endl;
-//	}
-//}
-
-void CameraChameleon::SetFrameRateOnOff(bool onOff) {
-    if (m_cameraPaused)
-        return;
-    Property prop;
+void CameraChameleon::setFrameRateOnOff(bool onOff) {
+	attrMutex.lock();
+	Property prop;
     prop.type = FRAME_RATE;
     Error error = m_pCamera->GetProperty(&prop);
     if (error == PGRERROR_PROPERTY_FAILED) {
         cout << "Failed to get frame rate property" << endl;
+		attrMutex.unlock();
         return;
     }
 
@@ -756,107 +637,56 @@ void CameraChameleon::SetFrameRateOnOff(bool onOff) {
     error = m_pCamera->SetProperty(&prop);
     if (error == PGRERROR_PROPERTY_FAILED) {
         cout << "Failed to set frame rate property" << endl;
-    }
-}
-
-double CameraChameleon::GetFrameRate() {
-    if (m_cameraPaused)
-        return 0;
-    Property prop;
-    prop.type = FRAME_RATE;
-    Error error = m_pCamera->GetProperty(&prop);
-    if (error == PGRERROR_PROPERTY_FAILED) {
-        cout << "Failed to get frame rate property" << endl;
-        return 0;
-
-    }
-    m_frameRate = prop.absValue;
-    return (double)prop.absValue;
-}
-
-bool CameraChameleon::GetFrameRateAuto() {
-    if (m_cameraPaused)
-        return 0;
-    Property prop;
-    prop.type = FRAME_RATE;
-    Error error = m_pCamera->GetProperty(&prop);
-    if (error == PGRERROR_PROPERTY_FAILED) {
-        cout << "Failed to get frame rate property" << endl;
-        return 0;
-    }
-    return prop.autoManualMode;
-}
-
-bool CameraChameleon::GetFrameRateOnOff() {
-    if (m_cameraPaused)
-        return 0;
-    Property prop;
-    prop.type = FRAME_RATE;
-    Error error = m_pCamera->GetProperty(&prop);
-    if (error == PGRERROR_PROPERTY_FAILED) {
-        cout << "Failed to get frame rate property" << endl;
-        return 0;
-    }
-    return prop.onOff;
+	}
+	attrMutex.unlock();
 }
 
 /** Brightness functions. */
-void CameraChameleon::SetBrightness(double brightness) {
-    if (m_cameraPaused)
-        return;
-    Property prop;
+void CameraChameleon::setBrightness(double brightness) {
+	attrMutex.lock();
+	Property prop;
     prop.type = BRIGHTNESS;
     Error error = m_pCamera->GetProperty(&prop);
     if (error == PGRERROR_PROPERTY_FAILED) {
         cout << "Failed to get brightness property" << endl;
+		attrMutex.unlock();
         return;
     }
     prop.absValue = (float)brightness;
     error = m_pCamera->SetProperty(&prop);
     if (error == PGRERROR_PROPERTY_FAILED) {
         cout << "Failed to set brightness property" << endl;
-    }
-}
-
-double CameraChameleon::GetBrightness() {
-    if (m_cameraPaused)
-        return 0;
-    Property prop;
-    prop.type = BRIGHTNESS;
-    Error error = m_pCamera->GetProperty(&prop);
-    if (error == PGRERROR_PROPERTY_FAILED) {
-        cout << "Failed to get brightness property" << endl;
-        return 0;
-    }
-    return (double)prop.absValue;
+	}
+	attrMutex.unlock();
 }
 
 /** Exposure functions. */
-void CameraChameleon::SetExposure(double exposure) {
-    if (m_cameraPaused)
-        return;
-    Property prop;
+void CameraChameleon::setExposure(double exposure) {
+	attrMutex.unlock();
+	Property prop;
     prop.type = AUTO_EXPOSURE;
     Error error = m_pCamera->GetProperty(&prop);
     if (error == PGRERROR_PROPERTY_FAILED) {
         cout << "Failed to get exposure property" << endl;
+		attrMutex.unlock();
         return;
     }
     prop.absValue = (float)exposure;
     error = m_pCamera->SetProperty(&prop);
     if (error == PGRERROR_PROPERTY_FAILED) {
         cout << "Failed to set exposure property" << endl;
-    }
+	}
+	attrMutex.unlock();
 }
 
-void CameraChameleon::SetExposureAuto(bool a) {
-    if (m_cameraPaused)
-        return;
-    Property prop;
+void CameraChameleon::setExposureAuto(bool a) {
+	attrMutex.unlock();
+	Property prop;
     prop.type = AUTO_EXPOSURE;
     Error error = m_pCamera->GetProperty(&prop);
     if (error == PGRERROR_PROPERTY_FAILED) {
         cout << "Failed to get exposure property" << endl;
+		attrMutex.unlock();
         return;
     }
     prop.absControl = !a;
@@ -864,182 +694,110 @@ void CameraChameleon::SetExposureAuto(bool a) {
     error = m_pCamera->SetProperty(&prop);
     if (error == PGRERROR_PROPERTY_FAILED) {
         cout << "Failed to set exposure property" << endl;
-    }
+	}
+	attrMutex.unlock();
 }
 
-void CameraChameleon::SetExposureOnOff(bool onOff) {
-    if (m_cameraPaused)
-        return;
-    Property prop;
+void CameraChameleon::setExposureOnOff(bool onOff) {
+	attrMutex.unlock();
+	Property prop;
     prop.type = AUTO_EXPOSURE;
     Error error = m_pCamera->GetProperty(&prop);
     if (error == PGRERROR_PROPERTY_FAILED) {
         cout << "Failed to get exposure property" << endl;
+		attrMutex.unlock();
         return;
     }
     prop.onOff = onOff;
     error = m_pCamera->SetProperty(&prop);
     if (error == PGRERROR_PROPERTY_FAILED) {
         cout << "Failed to set exposure property" << endl;
-    }
+	}
+	attrMutex.unlock();
 }
 
-void CameraChameleon::SetExposureOnePush(bool onePush) {
-    if (m_cameraPaused)
-        return;
-    Property prop;
+void CameraChameleon::setExposureOnePush(bool onePush) {
+	attrMutex.lock();
+	Property prop;
     prop.type = AUTO_EXPOSURE;
     Error error = m_pCamera->GetProperty(&prop);
     if (error == PGRERROR_PROPERTY_FAILED) {
         cout << "Failed to get exposure property" << endl;
+		attrMutex.unlock();
         return;
     }
     prop.onePush = onePush;
     error = m_pCamera->SetProperty(&prop);
     if (error == PGRERROR_PROPERTY_FAILED) {
         cout << "Failed to set exposure property" << endl;
-    }
-}
-
-double CameraChameleon::GetExposure() {
-    if (m_cameraPaused)
-        return 0;
-    Property prop;
-    prop.type = AUTO_EXPOSURE;
-    Error error = m_pCamera->GetProperty(&prop);
-    if (error == PGRERROR_PROPERTY_FAILED) {
-        cout << "Failed to get exposure property" << endl;
-        return 0;
-    }
-    return (double)prop.absValue;
-}
-
-bool CameraChameleon::GetExposureAuto() {
-    if (m_cameraPaused)
-        return 0;
-    Property prop;
-    prop.type = AUTO_EXPOSURE;
-    Error error = m_pCamera->GetProperty(&prop);
-    if (error == PGRERROR_PROPERTY_FAILED) {
-        cout << "Failed to get exposure property" << endl;
-        return 0;
-    }
-    return prop.autoManualMode;
-}
-
-bool CameraChameleon::GetExposureOnOff() {
-    if (m_cameraPaused)
-        return 0;
-    Property prop;
-    prop.type = AUTO_EXPOSURE;
-    Error error = m_pCamera->GetProperty(&prop);
-    if (error == PGRERROR_PROPERTY_FAILED) {
-        cout << "Failed to get exposure property" << endl;
-        return 0;
-    }
-    return prop.onOff;
-}
-
-bool CameraChameleon::GetExposureOnePush() {
-    if (m_cameraPaused)
-        return 0;
-    Property prop;
-    prop.type = AUTO_EXPOSURE;
-    Error error = m_pCamera->GetProperty(&prop);
-    if (error == PGRERROR_PROPERTY_FAILED) {
-        cout << "Failed to get exposure property" << endl;
-        return 0;
-    }
-    return prop.onePush;
+	}
+	attrMutex.unlock();
 }
 
 /** Gamma functions. */
-void CameraChameleon::SetGamma(double gamma) {
-    if (m_cameraPaused)
-        return;
-    Property prop;
+void CameraChameleon::setGamma(double gamma) {
+	attrMutex.lock();
+	Property prop;
     prop.type = GAMMA;
     Error error = m_pCamera->GetProperty(&prop);
     if (error == PGRERROR_PROPERTY_FAILED) {
         cout << "Failed to get gamma property" << endl;
+		attrMutex.unlock();
         return;
     }
     prop.absValue = (float)gamma;
     error = m_pCamera->SetProperty(&prop);
     if (error == PGRERROR_PROPERTY_FAILED) {
         cout << "Failed to set gamma property" << endl;
-    }
+	}
+	attrMutex.unlock();
 }
 
-void CameraChameleon::SetGammaOnOff(bool onOff) {
-    if (m_cameraPaused)
-        return;
-    Property prop;
+void CameraChameleon::setGammaOnOff(bool onOff) {
+	attrMutex.lock();
+	Property prop;
     prop.type = GAMMA;
     Error error = m_pCamera->GetProperty(&prop);
     if (error == PGRERROR_PROPERTY_FAILED) {
         cout << "Failed to get gamma property" << endl;
+		attrMutex.unlock();
         return;
     }
     prop.onOff = onOff;
     error = m_pCamera->SetProperty(&prop);
     if (error == PGRERROR_PROPERTY_FAILED) {
         cout << "Failed to set gamma property" << endl;
-    }
-}
-
-double CameraChameleon::GetGamma() {
-    if (m_cameraPaused)
-        return 0;
-    Property prop;
-    prop.type = GAMMA;
-    Error error = m_pCamera->GetProperty(&prop);
-    if (error == PGRERROR_PROPERTY_FAILED) {
-        cout << "Failed to get gamma property" << endl;
-        return 0;
-    }
-    return (double)prop.absValue;
-}
-
-bool CameraChameleon::GetGammaOnOff() {
-    if (m_cameraPaused)
-        return 0;
-    Property prop;
-    prop.type = GAMMA;
-    Error error = m_pCamera->GetProperty(&prop);
-    if (error == PGRERROR_PROPERTY_FAILED) {
-        cout << "Failed to get gamma property" << endl;
-        return 0;
-    }
-    return prop.onOff;
+	}
+	attrMutex.unlock();
 }
 
 /** Shutter functions. */
-void CameraChameleon::SetShutter(double shutter) {
-    if (m_cameraPaused)
-        return;
-    Property prop;
+void CameraChameleon::setShutter(double shutter) {
+	attrMutex.lock();
+	Property prop;
     prop.type = SHUTTER;
     Error error = m_pCamera->GetProperty(&prop);
     if (error == PGRERROR_PROPERTY_FAILED) {
         cout << "Failed to get shutter property" << endl;
+		attrMutex.unlock();
         return;
     }
     prop.absValue = (float)shutter;
     error = m_pCamera->SetProperty(&prop);
     if (error == PGRERROR_PROPERTY_FAILED) {
         cout << "Failed to set shutter property" << endl;
-    }
+	}
+	attrMutex.unlock();
 }
 
-void CameraChameleon::SetShutterAuto(bool a) {
-    if (m_cameraPaused)
-        return;
-    Property prop;
+void CameraChameleon::setShutterAuto(bool a) {
+	attrMutex.lock();
+	Property prop;
     prop.type = SHUTTER;
     Error error = m_pCamera->GetProperty(&prop);
     if (error == PGRERROR_PROPERTY_FAILED) {
         cout << "Failed to get shutter property" << endl;
+		attrMutex.unlock();
         return;
     }
     prop.absControl = !a;
@@ -1047,172 +805,428 @@ void CameraChameleon::SetShutterAuto(bool a) {
     error = m_pCamera->SetProperty(&prop);
     if (error == PGRERROR_PROPERTY_FAILED) {
         cout << "Failed to set shutter property" << endl;
-    }
+	}
+	attrMutex.unlock();
 }
 
-void CameraChameleon::SetShutterOnePush(bool onePush) {
-    if (m_cameraPaused)
-        return;
-    Property prop;
+void CameraChameleon::setShutterOnePush(bool onePush) {
+	attrMutex.lock();
+	Property prop;
     prop.type = SHUTTER;
     Error error = m_pCamera->GetProperty(&prop);
     if (error == PGRERROR_PROPERTY_FAILED) {
         cout << "Failed to get shutter property" << endl;
+		attrMutex.unlock();
         return;
     }
     prop.onePush = onePush;
     error = m_pCamera->SetProperty(&prop);
     if (error == PGRERROR_PROPERTY_FAILED) {
         cout << "Failed to set shutter property" << endl;
-    }
-}
-
-double CameraChameleon::GetShutter() {
-    if (m_cameraPaused)
-        return 0;
-    Property prop;
-    prop.type = SHUTTER;
-    Error error = m_pCamera->GetProperty(&prop);
-    if (error == PGRERROR_PROPERTY_FAILED) {
-        cout << "Failed to get shutter property" << endl;
-        return 0;
-    }
-    return (double)prop.absValue;
-}
-
-bool CameraChameleon::GetShutterAuto() {
-    if (m_cameraPaused)
-        return 0;
-    Property prop;
-    prop.type = SHUTTER;
-    Error error = m_pCamera->GetProperty(&prop);
-    if (error == PGRERROR_PROPERTY_FAILED) {
-        cout << "Failed to get shutter property" << endl;
-        return 0;
-    }
-    return prop.autoManualMode;
-}
-
-bool CameraChameleon::GetShutterOnePush() {
-    if (m_cameraPaused)
-        return 0;
-    Property prop;
-    prop.type = SHUTTER;
-    Error error = m_pCamera->GetProperty(&prop);
-    if (error == PGRERROR_PROPERTY_FAILED) {
-        cout << "Failed to get shutter property" << endl;
-        return 0;
-    }
-    return prop.onePush;
+	}
+	attrMutex.unlock();
 }
 
 /** Gain functions. */
-void CameraChameleon::SetGain(double gain) {
-    if (m_cameraPaused)
-        return;
-    Property prop;
+void CameraChameleon::setGain(double gain) {
+	attrMutex.lock();
+	Property prop;
     prop.type = GAIN;
     Error error = m_pCamera->GetProperty(&prop);
     if (error == PGRERROR_PROPERTY_FAILED) {
         cout << "Failed to get gain property" << endl;
+		attrMutex.unlock();
         return;
     }
+	prop.absControl = true;
     prop.absValue = (float)gain;
     error = m_pCamera->SetProperty(&prop);
     if (error == PGRERROR_PROPERTY_FAILED) {
         cout << "Failed to set gain property" << endl;
-    }
+	}
+	attrMutex.unlock();
 }
 
-void CameraChameleon::SetGainAuto(bool a) {
-    if (m_cameraPaused)
-        return;
-    Property prop;
+void CameraChameleon::setGainAuto(bool a) {
+	attrMutex.lock();
+	Property prop;
     prop.type = GAIN;
     Error error = m_pCamera->GetProperty(&prop);
     if (error == PGRERROR_PROPERTY_FAILED) {
         cout << "Failed to get gain property" << endl;
+		attrMutex.unlock();
         return;
-    }
-    prop.absControl = !a;
+	}
     prop.autoManualMode = a;
     error = m_pCamera->SetProperty(&prop);
     if (error == PGRERROR_PROPERTY_FAILED) {
         cout << "Failed to set gain property" << endl;
-    }
+	}
+	attrMutex.unlock();
 }
 
-void CameraChameleon::SetGainOnePush(bool onePush) {
-    if (m_cameraPaused)
-        return;
-    Property prop;
+void CameraChameleon::setGainOnePush(bool onePush) {
+	attrMutex.lock();
+	Property prop;
     prop.type = GAIN;
     Error error = m_pCamera->GetProperty(&prop);
     if (error == PGRERROR_PROPERTY_FAILED) {
         cout << "Failed to get gain property" << endl;
+		attrMutex.unlock();
         return;
     }
     prop.onePush = onePush;
     error = m_pCamera->SetProperty(&prop);
     if (error == PGRERROR_PROPERTY_FAILED) {
         cout << "Failed to set gain property" << endl;
-    }
-}
-
-double CameraChameleon::GetGain() {
-    if (m_cameraPaused)
-        return 0;
-    Property prop;
-    prop.type = GAIN;
-    Error error = m_pCamera->GetProperty(&prop);
-    if (error == PGRERROR_PROPERTY_FAILED) {
-        cout << "Failed to get gain property" << endl;
-        return 0;
-    }
-    return (double)prop.absValue;
-}
-
-bool CameraChameleon::GetGainOnePush() {
-    if (m_cameraPaused)
-        return 0;
-    Property prop;
-    prop.type = GAIN;
-    Error error = m_pCamera->GetProperty(&prop);
-    if (error == PGRERROR_PROPERTY_FAILED) {
-        cout << "Failed to get gain property" << endl;
-        return 0;
-    }
-    return prop.onePush;
-}
-
-bool CameraChameleon::GetGainAuto() {
-    if (m_cameraPaused)
-        return 0;
-    Property prop;
-    prop.type = GAIN;
-    Error error = m_pCamera->GetProperty(&prop);
-    if (error == PGRERROR_PROPERTY_FAILED) {
-        cout << "Failed to get gain property" << endl;
-        return 0;
-    }
-    return prop.autoManualMode;
+	}
+	attrMutex.unlock();
 }
 
 /** Temperature function. */
-double CameraChameleon::GetTemperature() {
-
-    if (m_cameraPaused)
-        return 0;
+double CameraChameleon::getTemperature() {
     Property prop;
     prop.type = TEMPERATURE;
     Error error = m_pCamera->GetProperty(&prop);
     if (error == PGRERROR_PROPERTY_FAILED) {
         cout << "Failed to get temperature property" << endl;
         return 0;
-    }
+	}
     return (double)prop.absValue;
+}
+
+
+double CameraChameleon::getFrameRate() {
+	propMutex.lock();
+	double val = frameRate;
+	propMutex.unlock();
+	return val;
+}
+
+bool CameraChameleon::getFrameRateAuto() {
+	propMutex.lock();
+	double val = frameRateAuto;
+	propMutex.unlock();
+	return val;
+}
+
+bool CameraChameleon::getFrameRateOnOff() {
+	propMutex.lock();
+	double val = frameRateOnOff;
+	propMutex.unlock();
+	return val;
+}
+
+double CameraChameleon::getBrightness() {
+	propMutex.lock();
+	double val = brightness;
+	propMutex.unlock();
+
+	return val;
+}
+
+double CameraChameleon::getExposure() {
+	propMutex.lock();
+	double val = exposure;
+	propMutex.unlock();
+	return val;
+}
+
+bool CameraChameleon::getExposureAuto() {
+	propMutex.lock();
+	double val = exposureAuto;
+	propMutex.unlock();
+	return val;
+}
+
+bool CameraChameleon::getExposureOnOff() {
+	propMutex.lock();
+	double val = exposureOnOff;
+	propMutex.unlock();
+	return val;
+}
+
+bool CameraChameleon::getExposureOnePush() {
+	propMutex.lock();
+	double val = exposureOnePush;
+	propMutex.unlock();
+	return val;
+}
+
+double CameraChameleon::getGamma() {
+	propMutex.lock();
+	double val = gamma;
+	propMutex.unlock();
+	return val;
+}
+
+bool CameraChameleon::getGammaOnOff() {
+	propMutex.lock();
+	double val = gammaOnOff;
+	propMutex.unlock();
+	return val;
+}
+
+double CameraChameleon::getShutter() {
+	propMutex.lock();
+	double val = shutter;
+	propMutex.unlock();
+	return val;
+}
+
+bool CameraChameleon::getShutterAuto() {
+	propMutex.lock();
+	double val = shutterAuto;
+	propMutex.unlock();
+	return val;
+}
+
+bool CameraChameleon::getShutterOnePush() {
+	propMutex.lock();
+	double val = shutterOnePush;
+	propMutex.unlock();
+	return val;
+}
+
+double CameraChameleon::getGain() {
+	propMutex.lock();
+	double val = gain;
+	propMutex.unlock();
+	return val;
+}
+
+bool CameraChameleon::getGainOnePush() {
+	propMutex.lock();
+	double val = gainOnePush;
+	propMutex.unlock();
+	return val;
+}
+
+bool CameraChameleon::getGainAuto() {
+	propMutex.lock();
+	double val = gainAuto;
+	propMutex.unlock();
+	return val;
+}
+
+double CameraChameleon::getFrameRateMin() {
+	propMutex.lock();
+	double val = frameRateMin;
+	propMutex.unlock();
+	return val;
+}
+
+double CameraChameleon::getFrameRateMax() {
+	propMutex.lock();
+	double val = frameRateMax;
+	propMutex.unlock();
+	return val;
+}
+
+double CameraChameleon::getBrightnessMin() {
+	propMutex.lock();
+	double val = brightnessMin;
+	propMutex.unlock();
+	return val;
+}
+
+double CameraChameleon::getBrightnessMax() {
+	propMutex.lock();
+	double val = brightnessMax;
+	propMutex.unlock();
+	return val;
+}
+
+double CameraChameleon::getExposureMin() {
+	propMutex.lock();
+	double val = exposureMin;
+	propMutex.unlock();
+	return val;
+}
+
+double CameraChameleon::getExposureMax() {
+	propMutex.lock();
+	double val = exposureMax;
+	propMutex.unlock();
+	return val;
+}
+
+double CameraChameleon::getGammaMin() {
+	propMutex.lock();
+	double val = gammaMin;
+	propMutex.unlock();
+	return val;
+}
+
+double CameraChameleon::getGammaMax() {
+	propMutex.lock();
+	double val = gammaMax;
+	propMutex.unlock();
+	return val;
+}
+
+double CameraChameleon::getShutterMin() {
+	propMutex.lock();
+	double val = shutterMin;
+	propMutex.unlock();
+	return val;
+}
+
+double CameraChameleon::getShutterMax() {
+	propMutex.lock();
+	double val = shutterMax;
+	propMutex.unlock();
+	return val;
+}
+
+double CameraChameleon::getGainMin() {
+	propMutex.lock();
+	double val = gainMin;
+	propMutex.unlock();
+	return val;
+}
+
+double CameraChameleon::getGainMax() {
+	propMutex.lock();
+	double val = gainMax;
+	propMutex.unlock();
+	return val;
+}
+
+Property CameraChameleon::getProperty(PropertyType type) {
+	Property prop;
+	prop.type = type;
+	Error error = m_pCamera->GetProperty(&prop);
+	if (error == PGRERROR_PROPERTY_FAILED) {
+		cout << "Failed to get temperature property" << endl;
+	}
+	return prop;
+}
+
+PropertyInfo CameraChameleon::getPropertyInfo(PropertyType type) {
+	PropertyInfo propInfo;
+	propInfo.type = type;
+	Error error = m_pCamera->GetPropertyInfo(&propInfo);
+	if (error == PGRERROR_PROPERTY_FAILED) {
+		cout << "Failed to get info of property with type " << type << endl;
+	}
+	return propInfo;
+}
+
+void CameraChameleon::readProperties() {
+	Property prop;
+	PropertyInfo propInfo;
+
+	propMutex.lock();
+
+	// Frame rate
+	prop = getProperty(FRAME_RATE);
+	propInfo = getPropertyInfo(FRAME_RATE);
+	frameRate = prop.absValue;
+	frameRateMin = propInfo.absMin;
+	frameRateMax = propInfo.absMax;
+	frameRateAuto = prop.autoManualMode;
+	frameRateOnOff = prop.onOff;
+
+	// Brightness
+	prop = getProperty(BRIGHTNESS);
+	propInfo = getPropertyInfo(BRIGHTNESS);
+	brightness = prop.absValue;
+	brightnessMin = propInfo.absMin;
+	brightnessMax = propInfo.absMax;
+
+	// Exposure
+	prop = getProperty(AUTO_EXPOSURE);
+	propInfo = getPropertyInfo(AUTO_EXPOSURE);
+	exposure = prop.absValue;
+	exposureMin = propInfo.absMin;
+	exposureMax = propInfo.absMax;
+	exposureAuto = prop.autoManualMode;
+	exposureOnOff = prop.onOff;
+	exposureOnePush = prop.onePush;
+
+	// Gamma
+	prop = getProperty(GAMMA);
+	propInfo = getPropertyInfo(GAMMA);
+	gamma = prop.absValue;
+	gammaMin = propInfo.absMin;
+	gammaMax = propInfo.absMax;
+	gammaOnOff = prop.onOff;
+
+	// Gain
+	prop = getProperty(GAIN);
+	propInfo = getPropertyInfo(GAIN);
+	gain = prop.absValue;
+	gainMin = propInfo.absMin;
+	gainMax = propInfo.absMax;
+	gainAuto = prop.autoManualMode;
+	gainOnePush = prop.onePush;
+
+	// Shutter
+	prop = getProperty(SHUTTER);
+	propInfo = getPropertyInfo(SHUTTER);
+	shutter = prop.absValue;
+	shutterMin = propInfo.absMin;
+	shutterMax = propInfo.absMax;
+	shutterAuto = prop.autoManualMode;
+	shutterOnePush = prop.onePush;
+
+	propMutex.unlock();
 }
 
 void CameraChameleon::setTangoDeviceClass(TANGO_BASE_CLASS *tc) {
     this->tangoClass = tc;
+}
+
+void CameraChameleon::autoExposure() {
+	this->setExposureAuto(false);
+	this->setExposureOnOff(true);
+	this->setExposureOnePush(false);
+	this->setGainAuto(false);
+	this->setGainOnePush(false);
+	this->setShutterAuto(false);
+	this->setShutterOnePush(false);
+
+	if (fabs(amp - autoExposureValue) < 5.0) {
+		programAutoExposure = false;
+	} else {
+		double newGain = 0.0;
+		double newShutter = shutter;
+
+		double mult = autoExposureValue / amp;
+		newShutter *= mult;
+		if (newShutter < shutterMin) {
+			double p1 = newShutter;
+			double p0 = shutterMin;
+			newShutter = shutterMin;
+			newGain = 10.0 * log10(p1/p0);
+			if (newGain < gainMin)
+				newGain = gainMin;
+		} else if (newShutter > shutterMax) {
+			double p1 = newShutter;
+			double p0 = shutterMax;
+			newShutter = shutterMax;
+			newGain = 10.0 * log10(p1/p0);
+			if (newGain > gainMax)
+				newGain = gainMax;
+		}
+		this->setShutter(newShutter);
+		this->setGain(newGain);
+	}
+}
+
+void CameraChameleon::setAutoExposure() {
+	attrMutex.lock();
+	programAutoExposure = true;
+	attrMutex.unlock();
+}
+
+double CameraChameleon::getAutoExposureValue() {
+	return autoExposureValue;
+}
+
+void CameraChameleon::setAutoExposureValue(int val) {
+	attrMutex.lock();
+	autoExposureValue = val;
+	attrMutex.unlock();
 }

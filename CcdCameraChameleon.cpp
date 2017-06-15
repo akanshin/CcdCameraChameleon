@@ -78,6 +78,7 @@ long long t2 = t1;
 //  Status        |  Inherited (no method)
 //  play          |  play
 //  pause         |  pause
+//  setExposure   |  set_exposure
 //================================================================
 
 //================================================================
@@ -109,6 +110,18 @@ long long t2 = t1;
 //  quality           |  Tango::DevLong	Scalar
 //  phi               |  Tango::DevDouble	Scalar
 //  scale             |  Tango::DevDouble	Scalar
+//  frameRateMin      |  Tango::DevDouble	Scalar
+//  frameRateMax      |  Tango::DevDouble	Scalar
+//  exposureMin       |  Tango::DevDouble	Scalar
+//  exposureMax       |  Tango::DevDouble	Scalar
+//  brightnessMin     |  Tango::DevDouble	Scalar
+//  brightnessMax     |  Tango::DevDouble	Scalar
+//  gammaMin          |  Tango::DevDouble	Scalar
+//  gammaMax          |  Tango::DevDouble	Scalar
+//  gainMin           |  Tango::DevDouble	Scalar
+//  gainMax           |  Tango::DevDouble	Scalar
+//  shutterMin        |  Tango::DevDouble	Scalar
+//  shutterMax        |  Tango::DevDouble	Scalar
 //  imageEncodedJpeg  |  Tango::DevUChar	Spectrum  ( max = 1228800)
 //  fullImage         |  Tango::DevUChar	Image  ( max = 1280 x 960)
 //================================================================
@@ -195,6 +208,18 @@ void CcdCameraChameleon::delete_device()
 	delete[] attr_quality_read;
 	delete[] attr_phi_read;
 	delete[] attr_scale_read;
+	delete[] attr_frameRateMin_read;
+	delete[] attr_frameRateMax_read;
+	delete[] attr_exposureMin_read;
+	delete[] attr_exposureMax_read;
+	delete[] attr_brightnessMin_read;
+	delete[] attr_brightnessMax_read;
+	delete[] attr_gammaMin_read;
+	delete[] attr_gammaMax_read;
+	delete[] attr_gainMin_read;
+	delete[] attr_gainMax_read;
+	delete[] attr_shutterMin_read;
+	delete[] attr_shutterMax_read;
 	delete[] attr_imageEncodedJpeg_read;
 	delete[] attr_fullImage_read;
 }
@@ -244,6 +269,18 @@ void CcdCameraChameleon::init_device()
 	attr_quality_read = new Tango::DevLong[1];
 	attr_phi_read = new Tango::DevDouble[1];
 	attr_scale_read = new Tango::DevDouble[1];
+	attr_frameRateMin_read = new Tango::DevDouble[1];
+	attr_frameRateMax_read = new Tango::DevDouble[1];
+	attr_exposureMin_read = new Tango::DevDouble[1];
+	attr_exposureMax_read = new Tango::DevDouble[1];
+	attr_brightnessMin_read = new Tango::DevDouble[1];
+	attr_brightnessMax_read = new Tango::DevDouble[1];
+	attr_gammaMin_read = new Tango::DevDouble[1];
+	attr_gammaMax_read = new Tango::DevDouble[1];
+	attr_gainMin_read = new Tango::DevDouble[1];
+	attr_gainMax_read = new Tango::DevDouble[1];
+	attr_shutterMin_read = new Tango::DevDouble[1];
+	attr_shutterMax_read = new Tango::DevDouble[1];
 	attr_imageEncodedJpeg_read = new Tango::DevUChar[1228800];
 	attr_fullImage_read = new Tango::DevUChar[1280*960];
 	/*----- PROTECTED REGION ID(CcdCameraChameleon::init_device) ENABLED START -----*/
@@ -254,7 +291,7 @@ void CcdCameraChameleon::init_device()
 	camera = new CameraChameleon(serialNumber[0]);
 	camera->setTangoDeviceClass(this);
 
-	if (!camera->GetRunStatus()) {
+	if (!camera->getRunStatus()) {
 		std::cout << "Failed to initialize device." << std::endl;
 		set_state(Tango::FAULT);
 		set_status("Camera has not connected");
@@ -383,7 +420,7 @@ void CcdCameraChameleon::read_frameRate(Tango::Attribute &attr)
 	/*----- PROTECTED REGION ID(CcdCameraChameleon::read_frameRate) ENABLED START -----*/
 	//	Set the attribute value
 
-    *attr_frameRate_read = camera->GetFrameRate();
+	*attr_frameRate_read = camera->getFrameRate();
 	attr.set_value(attr_frameRate_read);
 	
 	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::read_frameRate
@@ -405,7 +442,7 @@ void CcdCameraChameleon::write_frameRate(Tango::WAttribute &attr)
 	attr.get_write_value(w_val);
 	/*----- PROTECTED REGION ID(CcdCameraChameleon::write_frameRate) ENABLED START -----*/
 
-    camera->SetFrameRate(w_val);
+    camera->setFrameRate(w_val);
 	
 	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::write_frameRate
 }
@@ -424,7 +461,7 @@ void CcdCameraChameleon::read_brightness(Tango::Attribute &attr)
 	/*----- PROTECTED REGION ID(CcdCameraChameleon::read_brightness) ENABLED START -----*/
 	//	Set the attribute value
 
-    *attr_brightness_read = camera->GetBrightness();
+	*attr_brightness_read = camera->getBrightness();
 	attr.set_value(attr_brightness_read);
 	
 	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::read_brightness
@@ -446,7 +483,7 @@ void CcdCameraChameleon::write_brightness(Tango::WAttribute &attr)
 	attr.get_write_value(w_val);
 	/*----- PROTECTED REGION ID(CcdCameraChameleon::write_brightness) ENABLED START -----*/
 	
-    camera->SetBrightness(w_val);
+	camera->setBrightness(w_val);
 
 	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::write_brightness
 }
@@ -465,7 +502,7 @@ void CcdCameraChameleon::read_exposure(Tango::Attribute &attr)
 	/*----- PROTECTED REGION ID(CcdCameraChameleon::read_exposure) ENABLED START -----*/
 	//	Set the attribute value
 
-    *attr_exposure_read = camera->GetExposure();
+	*attr_exposure_read = camera->getExposure();
 	attr.set_value(attr_exposure_read);
 	
 	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::read_exposure
@@ -487,7 +524,7 @@ void CcdCameraChameleon::write_exposure(Tango::WAttribute &attr)
 	attr.get_write_value(w_val);
 	/*----- PROTECTED REGION ID(CcdCameraChameleon::write_exposure) ENABLED START -----*/
 	
-    camera->SetExposure(w_val);
+	camera->setExposure(w_val);
 
 	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::write_exposure
 }
@@ -506,7 +543,7 @@ void CcdCameraChameleon::read_gamma(Tango::Attribute &attr)
 	/*----- PROTECTED REGION ID(CcdCameraChameleon::read_gamma) ENABLED START -----*/
 	//	Set the attribute value
 
-    *attr_gamma_read = camera->GetGamma();
+	*attr_gamma_read = camera->getGamma();
 	attr.set_value(attr_gamma_read);
 	
 	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::read_gamma
@@ -528,7 +565,7 @@ void CcdCameraChameleon::write_gamma(Tango::WAttribute &attr)
 	attr.get_write_value(w_val);
 	/*----- PROTECTED REGION ID(CcdCameraChameleon::write_gamma) ENABLED START -----*/
 	
-    camera->SetGamma(w_val);
+	camera->setGamma(w_val);
 	
 	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::write_gamma
 }
@@ -547,7 +584,7 @@ void CcdCameraChameleon::read_shutter(Tango::Attribute &attr)
 	/*----- PROTECTED REGION ID(CcdCameraChameleon::read_shutter) ENABLED START -----*/
 	//	Set the attribute value
 
-    *attr_shutter_read = camera->GetShutter();
+	*attr_shutter_read = camera->getShutter();
 	attr.set_value(attr_shutter_read);
 	
 	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::read_shutter
@@ -569,7 +606,7 @@ void CcdCameraChameleon::write_shutter(Tango::WAttribute &attr)
 	attr.get_write_value(w_val);
 	/*----- PROTECTED REGION ID(CcdCameraChameleon::write_shutter) ENABLED START -----*/
 	
-    camera->SetShutter(w_val);
+	camera->setShutter(w_val);
 	
 	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::write_shutter
 }
@@ -588,7 +625,7 @@ void CcdCameraChameleon::read_gain(Tango::Attribute &attr)
 	/*----- PROTECTED REGION ID(CcdCameraChameleon::read_gain) ENABLED START -----*/
 	//	Set the attribute value
 
-    *attr_gain_read = camera->GetGain();
+	*attr_gain_read = camera->getGain();
 	attr.set_value(attr_gain_read);
 	
 	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::read_gain
@@ -610,7 +647,7 @@ void CcdCameraChameleon::write_gain(Tango::WAttribute &attr)
 	attr.get_write_value(w_val);
 	/*----- PROTECTED REGION ID(CcdCameraChameleon::write_gain) ENABLED START -----*/
 	
-    camera->SetGain(w_val);
+	camera->setGain(w_val);
 	
 	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::write_gain
 }
@@ -710,7 +747,7 @@ void CcdCameraChameleon::read_frameRateAuto(Tango::Attribute &attr)
 	DEBUG_STREAM << "CcdCameraChameleon::read_frameRateAuto(Tango::Attribute &attr) entering... " << endl;
 	/*----- PROTECTED REGION ID(CcdCameraChameleon::read_frameRateAuto) ENABLED START -----*/
 	//	Set the attribute value
-    *attr_frameRateAuto_read = camera->GetFrameRateAuto();
+	*attr_frameRateAuto_read = camera->getFrameRateAuto();
 	attr.set_value(attr_frameRateAuto_read);
 	
 	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::read_frameRateAuto
@@ -732,7 +769,7 @@ void CcdCameraChameleon::write_frameRateAuto(Tango::WAttribute &attr)
 	attr.get_write_value(w_val);
 	/*----- PROTECTED REGION ID(CcdCameraChameleon::write_frameRateAuto) ENABLED START -----*/
 	
-    camera->SetFrameRateAuto(w_val);
+    camera->setFrameRateAuto(w_val);
 	
 	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::write_frameRateAuto
 }
@@ -751,7 +788,7 @@ void CcdCameraChameleon::read_frameRateOnOff(Tango::Attribute &attr)
 	/*----- PROTECTED REGION ID(CcdCameraChameleon::read_frameRateOnOff) ENABLED START -----*/
 	//	Set the attribute value
 
-    *attr_frameRateOnOff_read = camera->GetFrameRateOnOff();
+	*attr_frameRateOnOff_read = camera->getFrameRateOnOff();
     attr.set_value(attr_frameRateOnOff_read);
 	
 	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::read_frameRateOnOff
@@ -773,7 +810,7 @@ void CcdCameraChameleon::write_frameRateOnOff(Tango::WAttribute &attr)
 	attr.get_write_value(w_val);
 	/*----- PROTECTED REGION ID(CcdCameraChameleon::write_frameRateOnOff) ENABLED START -----*/
 	
-    camera->SetFrameRateOnOff(w_val);
+    camera->setFrameRateOnOff(w_val);
 
 	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::write_frameRateOnOff
 }
@@ -792,7 +829,7 @@ void CcdCameraChameleon::read_exposureAuto(Tango::Attribute &attr)
 	/*----- PROTECTED REGION ID(CcdCameraChameleon::read_exposureAuto) ENABLED START -----*/
 	//	Set the attribute value
 
-    *attr_exposureAuto_read = camera->GetExposureAuto();
+	*attr_exposureAuto_read = camera->getExposureAuto();
 	attr.set_value(attr_exposureAuto_read);
 	
 	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::read_exposureAuto
@@ -814,7 +851,7 @@ void CcdCameraChameleon::write_exposureAuto(Tango::WAttribute &attr)
 	attr.get_write_value(w_val);
 	/*----- PROTECTED REGION ID(CcdCameraChameleon::write_exposureAuto) ENABLED START -----*/
 	
-    camera->SetExposureAuto(w_val);
+	camera->setExposureAuto(w_val);
 	
 	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::write_exposureAuto
 }
@@ -833,7 +870,7 @@ void CcdCameraChameleon::read_exposureOnOff(Tango::Attribute &attr)
 	/*----- PROTECTED REGION ID(CcdCameraChameleon::read_exposureOnOff) ENABLED START -----*/
 	//	Set the attribute value
 
-    *attr_exposureOnOff_read = camera->GetExposureOnOff();
+	*attr_exposureOnOff_read = camera->getExposureOnOff();
 	attr.set_value(attr_exposureOnOff_read);
 	
 	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::read_exposureOnOff
@@ -855,7 +892,7 @@ void CcdCameraChameleon::write_exposureOnOff(Tango::WAttribute &attr)
 	attr.get_write_value(w_val);
 	/*----- PROTECTED REGION ID(CcdCameraChameleon::write_exposureOnOff) ENABLED START -----*/
 	
-    camera->SetExposureOnOff(w_val);
+	camera->setExposureOnOff(w_val);
 	
 	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::write_exposureOnOff
 }
@@ -874,7 +911,7 @@ void CcdCameraChameleon::read_exposureOnePush(Tango::Attribute &attr)
 	/*----- PROTECTED REGION ID(CcdCameraChameleon::read_exposureOnePush) ENABLED START -----*/
 	//	Set the attribute value
 
-    *attr_exposureOnePush_read = camera->GetExposureOnePush();
+	*attr_exposureOnePush_read = camera->getExposureOnePush();
 	attr.set_value(attr_exposureOnePush_read);
 	
 	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::read_exposureOnePush
@@ -896,7 +933,7 @@ void CcdCameraChameleon::write_exposureOnePush(Tango::WAttribute &attr)
 	attr.get_write_value(w_val);
 	/*----- PROTECTED REGION ID(CcdCameraChameleon::write_exposureOnePush) ENABLED START -----*/
 	
-    camera->SetExposureOnePush(w_val);
+	camera->setExposureOnePush(w_val);
 	
 	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::write_exposureOnePush
 }
@@ -915,7 +952,7 @@ void CcdCameraChameleon::read_gammaOnOff(Tango::Attribute &attr)
 	/*----- PROTECTED REGION ID(CcdCameraChameleon::read_gammaOnOff) ENABLED START -----*/
 	//	Set the attribute value
 
-    *attr_gammaOnOff_read = camera->GetGammaOnOff();
+	*attr_gammaOnOff_read = camera->getGammaOnOff();
 	attr.set_value(attr_gammaOnOff_read);
 	
 	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::read_gammaOnOff
@@ -937,7 +974,7 @@ void CcdCameraChameleon::write_gammaOnOff(Tango::WAttribute &attr)
 	attr.get_write_value(w_val);
 	/*----- PROTECTED REGION ID(CcdCameraChameleon::write_gammaOnOff) ENABLED START -----*/
 	
-    camera->SetGammaOnOff(w_val);
+	camera->setGammaOnOff(w_val);
 	
 	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::write_gammaOnOff
 }
@@ -956,7 +993,7 @@ void CcdCameraChameleon::read_gainAuto(Tango::Attribute &attr)
 	/*----- PROTECTED REGION ID(CcdCameraChameleon::read_gainAuto) ENABLED START -----*/
 	//	Set the attribute value
 
-    *attr_gainAuto_read = camera->GetGainAuto();
+	*attr_gainAuto_read = camera->getGainAuto();
 	attr.set_value(attr_gainAuto_read);
 	
 	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::read_gainAuto
@@ -978,7 +1015,7 @@ void CcdCameraChameleon::write_gainAuto(Tango::WAttribute &attr)
 	attr.get_write_value(w_val);
 	/*----- PROTECTED REGION ID(CcdCameraChameleon::write_gainAuto) ENABLED START -----*/
 	
-    camera->SetGainAuto(w_val);
+	camera->setGainAuto(w_val);
 	
 	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::write_gainAuto
 }
@@ -997,7 +1034,7 @@ void CcdCameraChameleon::read_gainOnePush(Tango::Attribute &attr)
 	/*----- PROTECTED REGION ID(CcdCameraChameleon::read_gainOnePush) ENABLED START -----*/
 	//	Set the attribute value
 
-    *attr_gainOnePush_read = camera->GetGainOnePush();
+	*attr_gainOnePush_read = camera->getGainOnePush();
 	attr.set_value(attr_gainOnePush_read);
 	
 	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::read_gainOnePush
@@ -1019,7 +1056,7 @@ void CcdCameraChameleon::write_gainOnePush(Tango::WAttribute &attr)
 	attr.get_write_value(w_val);
 	/*----- PROTECTED REGION ID(CcdCameraChameleon::write_gainOnePush) ENABLED START -----*/
 	
-    camera->SetGainOnePush(w_val);
+	camera->setGainOnePush(w_val);
 	
 	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::write_gainOnePush
 }
@@ -1038,7 +1075,7 @@ void CcdCameraChameleon::read_shutterAuto(Tango::Attribute &attr)
 	/*----- PROTECTED REGION ID(CcdCameraChameleon::read_shutterAuto) ENABLED START -----*/
 	//	Set the attribute value
 
-    *attr_shutterAuto_read = camera->GetShutterAuto();
+	*attr_shutterAuto_read = camera->getShutterAuto();
 	attr.set_value(attr_shutterAuto_read);
 	
 	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::read_shutterAuto
@@ -1060,7 +1097,7 @@ void CcdCameraChameleon::write_shutterAuto(Tango::WAttribute &attr)
 	attr.get_write_value(w_val);
 	/*----- PROTECTED REGION ID(CcdCameraChameleon::write_shutterAuto) ENABLED START -----*/
 	
-    camera->SetShutterAuto(w_val);
+	camera->setShutterAuto(w_val);
 
 	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::write_shutterAuto
 }
@@ -1079,7 +1116,7 @@ void CcdCameraChameleon::read_shutterOnePush(Tango::Attribute &attr)
 	/*----- PROTECTED REGION ID(CcdCameraChameleon::read_shutterOnePush) ENABLED START -----*/
 	//	Set the attribute value
 
-    *attr_shutterOnePush_read = camera->GetShutterOnePush();
+	*attr_shutterOnePush_read = camera->getShutterOnePush();
 	attr.set_value(attr_shutterOnePush_read);
 	
 	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::read_shutterOnePush
@@ -1101,7 +1138,7 @@ void CcdCameraChameleon::write_shutterOnePush(Tango::WAttribute &attr)
 	attr.get_write_value(w_val);
 	/*----- PROTECTED REGION ID(CcdCameraChameleon::write_shutterOnePush) ENABLED START -----*/
 	
-    camera->SetShutterOnePush(w_val);
+	camera->setShutterOnePush(w_val);
 	
 	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::write_shutterOnePush
 }
@@ -1120,7 +1157,7 @@ void CcdCameraChameleon::read_temperature(Tango::Attribute &attr)
 	/*----- PROTECTED REGION ID(CcdCameraChameleon::read_temperature) ENABLED START -----*/
 	//	Set the attribute value
 
-    *attr_temperature_read = camera->GetTemperature();
+	*attr_temperature_read = camera->getTemperature();
 	attr.set_value(attr_temperature_read);
 	
 	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::read_temperature
@@ -1140,7 +1177,7 @@ void CcdCameraChameleon::read_imageWidth(Tango::Attribute &attr)
 	/*----- PROTECTED REGION ID(CcdCameraChameleon::read_imageWidth) ENABLED START -----*/
 	//	Set the attribute value
 
-    *attr_imageWidth_read = camera->GetImageWidth();
+    *attr_imageWidth_read = camera->getImageWidth();
 	attr.set_value(attr_imageWidth_read);
 	
 	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::read_imageWidth
@@ -1160,7 +1197,7 @@ void CcdCameraChameleon::read_imageHeight(Tango::Attribute &attr)
 	/*----- PROTECTED REGION ID(CcdCameraChameleon::read_imageHeight) ENABLED START -----*/
 	//	Set the attribute value
 
-    *attr_imageHeight_read = camera->GetImageHeight();
+    *attr_imageHeight_read = camera->getImageHeight();
 	attr.set_value(attr_imageHeight_read);
 	
 	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::read_imageHeight
@@ -1270,6 +1307,258 @@ void CcdCameraChameleon::write_scale(Tango::WAttribute &attr)
 }
 //--------------------------------------------------------
 /**
+ *	Read attribute frameRateMin related method
+ *	Description: 
+ *
+ *	Data type:	Tango::DevDouble
+ *	Attr type:	Scalar
+ */
+//--------------------------------------------------------
+void CcdCameraChameleon::read_frameRateMin(Tango::Attribute &attr)
+{
+	DEBUG_STREAM << "CcdCameraChameleon::read_frameRateMin(Tango::Attribute &attr) entering... " << endl;
+	/*----- PROTECTED REGION ID(CcdCameraChameleon::read_frameRateMin) ENABLED START -----*/
+	//	Set the attribute value
+
+	*attr_frameRateMin_read = camera->getFrameRateMin();
+
+	attr.set_value(attr_frameRateMin_read);
+	
+	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::read_frameRateMin
+}
+//--------------------------------------------------------
+/**
+ *	Read attribute frameRateMax related method
+ *	Description: 
+ *
+ *	Data type:	Tango::DevDouble
+ *	Attr type:	Scalar
+ */
+//--------------------------------------------------------
+void CcdCameraChameleon::read_frameRateMax(Tango::Attribute &attr)
+{
+	DEBUG_STREAM << "CcdCameraChameleon::read_frameRateMax(Tango::Attribute &attr) entering... " << endl;
+	/*----- PROTECTED REGION ID(CcdCameraChameleon::read_frameRateMax) ENABLED START -----*/
+	//	Set the attribute value
+
+	*attr_frameRateMax_read = camera->getFrameRateMax();
+
+	attr.set_value(attr_frameRateMax_read);
+	
+	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::read_frameRateMax
+}
+//--------------------------------------------------------
+/**
+ *	Read attribute exposureMin related method
+ *	Description: 
+ *
+ *	Data type:	Tango::DevDouble
+ *	Attr type:	Scalar
+ */
+//--------------------------------------------------------
+void CcdCameraChameleon::read_exposureMin(Tango::Attribute &attr)
+{
+	DEBUG_STREAM << "CcdCameraChameleon::read_exposureMin(Tango::Attribute &attr) entering... " << endl;
+	/*----- PROTECTED REGION ID(CcdCameraChameleon::read_exposureMin) ENABLED START -----*/
+	//	Set the attribute value
+
+	*attr_exposureMin_read = camera->getExposureMin();
+
+	attr.set_value(attr_exposureMin_read);
+	
+	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::read_exposureMin
+}
+//--------------------------------------------------------
+/**
+ *	Read attribute exposureMax related method
+ *	Description: 
+ *
+ *	Data type:	Tango::DevDouble
+ *	Attr type:	Scalar
+ */
+//--------------------------------------------------------
+void CcdCameraChameleon::read_exposureMax(Tango::Attribute &attr)
+{
+	DEBUG_STREAM << "CcdCameraChameleon::read_exposureMax(Tango::Attribute &attr) entering... " << endl;
+	/*----- PROTECTED REGION ID(CcdCameraChameleon::read_exposureMax) ENABLED START -----*/
+	//	Set the attribute value
+
+	*attr_exposureMax_read = camera->getExposureMax();
+
+	attr.set_value(attr_exposureMax_read);
+	
+	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::read_exposureMax
+}
+//--------------------------------------------------------
+/**
+ *	Read attribute brightnessMin related method
+ *	Description: 
+ *
+ *	Data type:	Tango::DevDouble
+ *	Attr type:	Scalar
+ */
+//--------------------------------------------------------
+void CcdCameraChameleon::read_brightnessMin(Tango::Attribute &attr)
+{
+	DEBUG_STREAM << "CcdCameraChameleon::read_brightnessMin(Tango::Attribute &attr) entering... " << endl;
+	/*----- PROTECTED REGION ID(CcdCameraChameleon::read_brightnessMin) ENABLED START -----*/
+	//	Set the attribute value
+
+	*attr_brightnessMin_read = camera->getBrightnessMin();
+
+	attr.set_value(attr_brightnessMin_read);
+	
+	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::read_brightnessMin
+}
+//--------------------------------------------------------
+/**
+ *	Read attribute brightnessMax related method
+ *	Description: 
+ *
+ *	Data type:	Tango::DevDouble
+ *	Attr type:	Scalar
+ */
+//--------------------------------------------------------
+void CcdCameraChameleon::read_brightnessMax(Tango::Attribute &attr)
+{
+	DEBUG_STREAM << "CcdCameraChameleon::read_brightnessMax(Tango::Attribute &attr) entering... " << endl;
+	/*----- PROTECTED REGION ID(CcdCameraChameleon::read_brightnessMax) ENABLED START -----*/
+	//	Set the attribute value
+
+	*attr_brightnessMax_read = camera->getBrightnessMax();
+
+	attr.set_value(attr_brightnessMax_read);
+	
+	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::read_brightnessMax
+}
+//--------------------------------------------------------
+/**
+ *	Read attribute gammaMin related method
+ *	Description: 
+ *
+ *	Data type:	Tango::DevDouble
+ *	Attr type:	Scalar
+ */
+//--------------------------------------------------------
+void CcdCameraChameleon::read_gammaMin(Tango::Attribute &attr)
+{
+	DEBUG_STREAM << "CcdCameraChameleon::read_gammaMin(Tango::Attribute &attr) entering... " << endl;
+	/*----- PROTECTED REGION ID(CcdCameraChameleon::read_gammaMin) ENABLED START -----*/
+	//	Set the attribute value
+
+	*attr_gammaMin_read = camera->getGammaMin();
+
+	attr.set_value(attr_gammaMin_read);
+	
+	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::read_gammaMin
+}
+//--------------------------------------------------------
+/**
+ *	Read attribute gammaMax related method
+ *	Description: 
+ *
+ *	Data type:	Tango::DevDouble
+ *	Attr type:	Scalar
+ */
+//--------------------------------------------------------
+void CcdCameraChameleon::read_gammaMax(Tango::Attribute &attr)
+{
+	DEBUG_STREAM << "CcdCameraChameleon::read_gammaMax(Tango::Attribute &attr) entering... " << endl;
+	/*----- PROTECTED REGION ID(CcdCameraChameleon::read_gammaMax) ENABLED START -----*/
+	//	Set the attribute value
+
+	*attr_gammaMax_read = camera->getGammaMax();
+
+	attr.set_value(attr_gammaMax_read);
+	
+	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::read_gammaMax
+}
+//--------------------------------------------------------
+/**
+ *	Read attribute gainMin related method
+ *	Description: 
+ *
+ *	Data type:	Tango::DevDouble
+ *	Attr type:	Scalar
+ */
+//--------------------------------------------------------
+void CcdCameraChameleon::read_gainMin(Tango::Attribute &attr)
+{
+	DEBUG_STREAM << "CcdCameraChameleon::read_gainMin(Tango::Attribute &attr) entering... " << endl;
+	/*----- PROTECTED REGION ID(CcdCameraChameleon::read_gainMin) ENABLED START -----*/
+	//	Set the attribute value
+
+	*attr_gainMin_read = camera->getGainMin();
+
+	attr.set_value(attr_gainMin_read);
+	
+	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::read_gainMin
+}
+//--------------------------------------------------------
+/**
+ *	Read attribute gainMax related method
+ *	Description: 
+ *
+ *	Data type:	Tango::DevDouble
+ *	Attr type:	Scalar
+ */
+//--------------------------------------------------------
+void CcdCameraChameleon::read_gainMax(Tango::Attribute &attr)
+{
+	DEBUG_STREAM << "CcdCameraChameleon::read_gainMax(Tango::Attribute &attr) entering... " << endl;
+	/*----- PROTECTED REGION ID(CcdCameraChameleon::read_gainMax) ENABLED START -----*/
+	//	Set the attribute value
+
+	*attr_gainMax_read = camera->getGainMax();
+
+	attr.set_value(attr_gainMax_read);
+	
+	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::read_gainMax
+}
+//--------------------------------------------------------
+/**
+ *	Read attribute shutterMin related method
+ *	Description: 
+ *
+ *	Data type:	Tango::DevDouble
+ *	Attr type:	Scalar
+ */
+//--------------------------------------------------------
+void CcdCameraChameleon::read_shutterMin(Tango::Attribute &attr)
+{
+	DEBUG_STREAM << "CcdCameraChameleon::read_shutterMin(Tango::Attribute &attr) entering... " << endl;
+	/*----- PROTECTED REGION ID(CcdCameraChameleon::read_shutterMin) ENABLED START -----*/
+	//	Set the attribute value
+
+	*attr_shutterMin_read = camera->getShutterMin();
+
+	attr.set_value(attr_shutterMin_read);
+	
+	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::read_shutterMin
+}
+//--------------------------------------------------------
+/**
+ *	Read attribute shutterMax related method
+ *	Description: 
+ *
+ *	Data type:	Tango::DevDouble
+ *	Attr type:	Scalar
+ */
+//--------------------------------------------------------
+void CcdCameraChameleon::read_shutterMax(Tango::Attribute &attr)
+{
+	DEBUG_STREAM << "CcdCameraChameleon::read_shutterMax(Tango::Attribute &attr) entering... " << endl;
+	/*----- PROTECTED REGION ID(CcdCameraChameleon::read_shutterMax) ENABLED START -----*/
+	//	Set the attribute value
+
+	*attr_shutterMax_read = camera->getShutterMax();
+
+	attr.set_value(attr_shutterMax_read);
+	
+	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::read_shutterMax
+}
+//--------------------------------------------------------
+/**
  *	Read attribute imageEncodedJpeg related method
  *	Description: 
  *
@@ -1285,7 +1574,7 @@ void CcdCameraChameleon::read_imageEncodedJpeg(Tango::Attribute &attr)
 
     unsigned char* encodedImage;
     int size;
-    camera->GetImage(&encodedImage, &size);
+    camera->getImage(&encodedImage, &size);
 
     attr.set_value(encodedImage, size, 0, true);
 
@@ -1308,7 +1597,7 @@ void CcdCameraChameleon::read_fullImage(Tango::Attribute &attr)
 
 	int size = 1228800;
 	int width = 0, height = 0;
-	camera->GetBigImage(attr_fullImage_read, size, &width, &height);
+	camera->getBigImage(attr_fullImage_read, size, &width, &height);
 
 	attr.set_value(attr_fullImage_read, width, height);
 	
@@ -1345,7 +1634,7 @@ void CcdCameraChameleon::play()
 	
 	//	Add your own code
 
-    camera->Play();
+    camera->play();
 	
 	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::play
 }
@@ -1363,9 +1652,27 @@ void CcdCameraChameleon::pause()
 	
 	//	Add your own code
 
-    camera->Pause();
+    camera->pause();
 	
 	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::pause
+}
+//--------------------------------------------------------
+/**
+ *	Command setExposure related method
+ *	Description: 
+ *
+ */
+//--------------------------------------------------------
+void CcdCameraChameleon::set_exposure()
+{
+	DEBUG_STREAM << "CcdCameraChameleon::setExposure()  - " << device_name << endl;
+	/*----- PROTECTED REGION ID(CcdCameraChameleon::set_exposure) ENABLED START -----*/
+	
+	//	Add your own code
+
+	camera->setAutoExposure();
+	
+	/*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::set_exposure
 }
 //--------------------------------------------------------
 /**

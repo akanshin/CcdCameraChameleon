@@ -194,6 +194,24 @@ CORBA::Any *pauseClass::execute(Tango::DeviceImpl *device, TANGO_UNUSED(const CO
 	return new CORBA::Any();
 }
 
+//--------------------------------------------------------
+/**
+ * method : 		setExposureClass::execute()
+ * description : 	method to trigger the execution of the command.
+ *
+ * @param	device	The device on which the command must be executed
+ * @param	in_any	The command input data
+ *
+ *	returns The command output data (packed in the Any object)
+ */
+//--------------------------------------------------------
+CORBA::Any *setExposureClass::execute(Tango::DeviceImpl *device, TANGO_UNUSED(const CORBA::Any &in_any))
+{
+	cout2 << "setExposureClass::execute(): arrived" << endl;
+	((static_cast<CcdCameraChameleon *>(device))->set_exposure());
+	return new CORBA::Any();
+}
+
 
 //===================================================================
 //	Properties management
@@ -489,10 +507,10 @@ void CcdCameraChameleonClass::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	standard_unit	not set for frameRate
 	//	display_unit	not set for frameRate
 	//	format	not set for frameRate
-	framerate_prop.set_max_value("17");
-	framerate_prop.set_min_value("0");
-	framerate_prop.set_max_alarm("16.29");
-	framerate_prop.set_min_alarm("0.33");
+	//	max_value	not set for frameRate
+	//	min_value	not set for frameRate
+	//	max_alarm	not set for frameRate
+	//	min_alarm	not set for frameRate
 	//	max_warning	not set for frameRate
 	//	min_warning	not set for frameRate
 	//	delta_t	not set for frameRate
@@ -537,10 +555,10 @@ void CcdCameraChameleonClass::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	standard_unit	not set for exposure
 	//	display_unit	not set for exposure
 	//	format	not set for exposure
-	exposure_prop.set_max_value("2.5");
-	exposure_prop.set_min_value("-7.6");
-	exposure_prop.set_max_alarm("2.41");
-	exposure_prop.set_min_alarm("-7.58");
+	//	max_value	not set for exposure
+	//	min_value	not set for exposure
+	//	max_alarm	not set for exposure
+	//	min_alarm	not set for exposure
 	//	max_warning	not set for exposure
 	//	min_warning	not set for exposure
 	//	delta_t	not set for exposure
@@ -561,10 +579,10 @@ void CcdCameraChameleonClass::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	standard_unit	not set for gamma
 	//	display_unit	not set for gamma
 	//	format	not set for gamma
-	gamma_prop.set_max_value("4.1");
-	gamma_prop.set_min_value("0.4");
-	gamma_prop.set_max_alarm("4.0");
-	gamma_prop.set_min_alarm("0.5");
+	//	max_value	not set for gamma
+	//	min_value	not set for gamma
+	//	max_alarm	not set for gamma
+	//	min_alarm	not set for gamma
 	//	max_warning	not set for gamma
 	//	min_warning	not set for gamma
 	//	delta_t	not set for gamma
@@ -585,10 +603,10 @@ void CcdCameraChameleonClass::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	standard_unit	not set for shutter
 	//	display_unit	not set for shutter
 	//	format	not set for shutter
-	shutter_prop.set_max_value("67");
-	shutter_prop.set_min_value("0");
-	shutter_prop.set_max_alarm("66.64");
-	shutter_prop.set_min_alarm("0.01");
+	//	max_value	not set for shutter
+	//	min_value	not set for shutter
+	//	max_alarm	not set for shutter
+	//	min_alarm	not set for shutter
 	//	max_warning	not set for shutter
 	//	min_warning	not set for shutter
 	//	delta_t	not set for shutter
@@ -609,10 +627,10 @@ void CcdCameraChameleonClass::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	standard_unit	not set for gain
 	//	display_unit	not set for gain
 	//	format	not set for gain
-	gain_prop.set_max_value("24.1");
-	gain_prop.set_min_value("-5.7");
-	gain_prop.set_max_alarm("24.0");
-	gain_prop.set_min_alarm("-5.63");
+	//	max_value	not set for gain
+	//	min_value	not set for gain
+	//	max_alarm	not set for gain
+	//	min_alarm	not set for gain
 	//	max_warning	not set for gain
 	//	min_warning	not set for gain
 	//	delta_t	not set for gain
@@ -1043,8 +1061,8 @@ void CcdCameraChameleonClass::attribute_factory(vector<Tango::Attr *> &att_list)
 	//	format	not set for quality
 	//	max_value	not set for quality
 	//	min_value	not set for quality
-	quality_prop.set_max_alarm("100");
-	quality_prop.set_min_alarm("0");
+	//	max_alarm	not set for quality
+	//	min_alarm	not set for quality
 	//	max_warning	not set for quality
 	//	min_warning	not set for quality
 	//	delta_t	not set for quality
@@ -1103,6 +1121,294 @@ void CcdCameraChameleonClass::attribute_factory(vector<Tango::Attr *> &att_list)
 	scale->set_disp_level(Tango::OPERATOR);
 	//	Not Memorized
 	att_list.push_back(scale);
+
+	//	Attribute : frameRateMin
+	frameRateMinAttrib	*frameratemin = new frameRateMinAttrib();
+	Tango::UserDefaultAttrProp	frameratemin_prop;
+	//	description	not set for frameRateMin
+	//	label	not set for frameRateMin
+	//	unit	not set for frameRateMin
+	//	standard_unit	not set for frameRateMin
+	//	display_unit	not set for frameRateMin
+	//	format	not set for frameRateMin
+	//	max_value	not set for frameRateMin
+	//	min_value	not set for frameRateMin
+	//	max_alarm	not set for frameRateMin
+	//	min_alarm	not set for frameRateMin
+	//	max_warning	not set for frameRateMin
+	//	min_warning	not set for frameRateMin
+	//	delta_t	not set for frameRateMin
+	//	delta_val	not set for frameRateMin
+	
+	frameratemin->set_default_properties(frameratemin_prop);
+	//	Not Polled
+	frameratemin->set_disp_level(Tango::OPERATOR);
+	//	Not Memorized
+	att_list.push_back(frameratemin);
+
+	//	Attribute : frameRateMax
+	frameRateMaxAttrib	*frameratemax = new frameRateMaxAttrib();
+	Tango::UserDefaultAttrProp	frameratemax_prop;
+	//	description	not set for frameRateMax
+	//	label	not set for frameRateMax
+	//	unit	not set for frameRateMax
+	//	standard_unit	not set for frameRateMax
+	//	display_unit	not set for frameRateMax
+	//	format	not set for frameRateMax
+	//	max_value	not set for frameRateMax
+	//	min_value	not set for frameRateMax
+	//	max_alarm	not set for frameRateMax
+	//	min_alarm	not set for frameRateMax
+	//	max_warning	not set for frameRateMax
+	//	min_warning	not set for frameRateMax
+	//	delta_t	not set for frameRateMax
+	//	delta_val	not set for frameRateMax
+	
+	frameratemax->set_default_properties(frameratemax_prop);
+	//	Not Polled
+	frameratemax->set_disp_level(Tango::OPERATOR);
+	//	Not Memorized
+	att_list.push_back(frameratemax);
+
+	//	Attribute : exposureMin
+	exposureMinAttrib	*exposuremin = new exposureMinAttrib();
+	Tango::UserDefaultAttrProp	exposuremin_prop;
+	//	description	not set for exposureMin
+	//	label	not set for exposureMin
+	//	unit	not set for exposureMin
+	//	standard_unit	not set for exposureMin
+	//	display_unit	not set for exposureMin
+	//	format	not set for exposureMin
+	//	max_value	not set for exposureMin
+	//	min_value	not set for exposureMin
+	//	max_alarm	not set for exposureMin
+	//	min_alarm	not set for exposureMin
+	//	max_warning	not set for exposureMin
+	//	min_warning	not set for exposureMin
+	//	delta_t	not set for exposureMin
+	//	delta_val	not set for exposureMin
+	
+	exposuremin->set_default_properties(exposuremin_prop);
+	//	Not Polled
+	exposuremin->set_disp_level(Tango::OPERATOR);
+	//	Not Memorized
+	att_list.push_back(exposuremin);
+
+	//	Attribute : exposureMax
+	exposureMaxAttrib	*exposuremax = new exposureMaxAttrib();
+	Tango::UserDefaultAttrProp	exposuremax_prop;
+	//	description	not set for exposureMax
+	//	label	not set for exposureMax
+	//	unit	not set for exposureMax
+	//	standard_unit	not set for exposureMax
+	//	display_unit	not set for exposureMax
+	//	format	not set for exposureMax
+	//	max_value	not set for exposureMax
+	//	min_value	not set for exposureMax
+	//	max_alarm	not set for exposureMax
+	//	min_alarm	not set for exposureMax
+	//	max_warning	not set for exposureMax
+	//	min_warning	not set for exposureMax
+	//	delta_t	not set for exposureMax
+	//	delta_val	not set for exposureMax
+	
+	exposuremax->set_default_properties(exposuremax_prop);
+	//	Not Polled
+	exposuremax->set_disp_level(Tango::OPERATOR);
+	//	Not Memorized
+	att_list.push_back(exposuremax);
+
+	//	Attribute : brightnessMin
+	brightnessMinAttrib	*brightnessmin = new brightnessMinAttrib();
+	Tango::UserDefaultAttrProp	brightnessmin_prop;
+	//	description	not set for brightnessMin
+	//	label	not set for brightnessMin
+	//	unit	not set for brightnessMin
+	//	standard_unit	not set for brightnessMin
+	//	display_unit	not set for brightnessMin
+	//	format	not set for brightnessMin
+	//	max_value	not set for brightnessMin
+	//	min_value	not set for brightnessMin
+	//	max_alarm	not set for brightnessMin
+	//	min_alarm	not set for brightnessMin
+	//	max_warning	not set for brightnessMin
+	//	min_warning	not set for brightnessMin
+	//	delta_t	not set for brightnessMin
+	//	delta_val	not set for brightnessMin
+	
+	brightnessmin->set_default_properties(brightnessmin_prop);
+	//	Not Polled
+	brightnessmin->set_disp_level(Tango::OPERATOR);
+	//	Not Memorized
+	att_list.push_back(brightnessmin);
+
+	//	Attribute : brightnessMax
+	brightnessMaxAttrib	*brightnessmax = new brightnessMaxAttrib();
+	Tango::UserDefaultAttrProp	brightnessmax_prop;
+	//	description	not set for brightnessMax
+	//	label	not set for brightnessMax
+	//	unit	not set for brightnessMax
+	//	standard_unit	not set for brightnessMax
+	//	display_unit	not set for brightnessMax
+	//	format	not set for brightnessMax
+	//	max_value	not set for brightnessMax
+	//	min_value	not set for brightnessMax
+	//	max_alarm	not set for brightnessMax
+	//	min_alarm	not set for brightnessMax
+	//	max_warning	not set for brightnessMax
+	//	min_warning	not set for brightnessMax
+	//	delta_t	not set for brightnessMax
+	//	delta_val	not set for brightnessMax
+	
+	brightnessmax->set_default_properties(brightnessmax_prop);
+	//	Not Polled
+	brightnessmax->set_disp_level(Tango::OPERATOR);
+	//	Not Memorized
+	att_list.push_back(brightnessmax);
+
+	//	Attribute : gammaMin
+	gammaMinAttrib	*gammamin = new gammaMinAttrib();
+	Tango::UserDefaultAttrProp	gammamin_prop;
+	//	description	not set for gammaMin
+	//	label	not set for gammaMin
+	//	unit	not set for gammaMin
+	//	standard_unit	not set for gammaMin
+	//	display_unit	not set for gammaMin
+	//	format	not set for gammaMin
+	//	max_value	not set for gammaMin
+	//	min_value	not set for gammaMin
+	//	max_alarm	not set for gammaMin
+	//	min_alarm	not set for gammaMin
+	//	max_warning	not set for gammaMin
+	//	min_warning	not set for gammaMin
+	//	delta_t	not set for gammaMin
+	//	delta_val	not set for gammaMin
+	
+	gammamin->set_default_properties(gammamin_prop);
+	//	Not Polled
+	gammamin->set_disp_level(Tango::OPERATOR);
+	//	Not Memorized
+	att_list.push_back(gammamin);
+
+	//	Attribute : gammaMax
+	gammaMaxAttrib	*gammamax = new gammaMaxAttrib();
+	Tango::UserDefaultAttrProp	gammamax_prop;
+	//	description	not set for gammaMax
+	//	label	not set for gammaMax
+	//	unit	not set for gammaMax
+	//	standard_unit	not set for gammaMax
+	//	display_unit	not set for gammaMax
+	//	format	not set for gammaMax
+	//	max_value	not set for gammaMax
+	//	min_value	not set for gammaMax
+	//	max_alarm	not set for gammaMax
+	//	min_alarm	not set for gammaMax
+	//	max_warning	not set for gammaMax
+	//	min_warning	not set for gammaMax
+	//	delta_t	not set for gammaMax
+	//	delta_val	not set for gammaMax
+	
+	gammamax->set_default_properties(gammamax_prop);
+	//	Not Polled
+	gammamax->set_disp_level(Tango::OPERATOR);
+	//	Not Memorized
+	att_list.push_back(gammamax);
+
+	//	Attribute : gainMin
+	gainMinAttrib	*gainmin = new gainMinAttrib();
+	Tango::UserDefaultAttrProp	gainmin_prop;
+	//	description	not set for gainMin
+	//	label	not set for gainMin
+	//	unit	not set for gainMin
+	//	standard_unit	not set for gainMin
+	//	display_unit	not set for gainMin
+	//	format	not set for gainMin
+	//	max_value	not set for gainMin
+	//	min_value	not set for gainMin
+	//	max_alarm	not set for gainMin
+	//	min_alarm	not set for gainMin
+	//	max_warning	not set for gainMin
+	//	min_warning	not set for gainMin
+	//	delta_t	not set for gainMin
+	//	delta_val	not set for gainMin
+	
+	gainmin->set_default_properties(gainmin_prop);
+	//	Not Polled
+	gainmin->set_disp_level(Tango::OPERATOR);
+	//	Not Memorized
+	att_list.push_back(gainmin);
+
+	//	Attribute : gainMax
+	gainMaxAttrib	*gainmax = new gainMaxAttrib();
+	Tango::UserDefaultAttrProp	gainmax_prop;
+	//	description	not set for gainMax
+	//	label	not set for gainMax
+	//	unit	not set for gainMax
+	//	standard_unit	not set for gainMax
+	//	display_unit	not set for gainMax
+	//	format	not set for gainMax
+	//	max_value	not set for gainMax
+	//	min_value	not set for gainMax
+	//	max_alarm	not set for gainMax
+	//	min_alarm	not set for gainMax
+	//	max_warning	not set for gainMax
+	//	min_warning	not set for gainMax
+	//	delta_t	not set for gainMax
+	//	delta_val	not set for gainMax
+	
+	gainmax->set_default_properties(gainmax_prop);
+	//	Not Polled
+	gainmax->set_disp_level(Tango::OPERATOR);
+	//	Not Memorized
+	att_list.push_back(gainmax);
+
+	//	Attribute : shutterMin
+	shutterMinAttrib	*shuttermin = new shutterMinAttrib();
+	Tango::UserDefaultAttrProp	shuttermin_prop;
+	//	description	not set for shutterMin
+	//	label	not set for shutterMin
+	//	unit	not set for shutterMin
+	//	standard_unit	not set for shutterMin
+	//	display_unit	not set for shutterMin
+	//	format	not set for shutterMin
+	//	max_value	not set for shutterMin
+	//	min_value	not set for shutterMin
+	//	max_alarm	not set for shutterMin
+	//	min_alarm	not set for shutterMin
+	//	max_warning	not set for shutterMin
+	//	min_warning	not set for shutterMin
+	//	delta_t	not set for shutterMin
+	//	delta_val	not set for shutterMin
+	
+	shuttermin->set_default_properties(shuttermin_prop);
+	//	Not Polled
+	shuttermin->set_disp_level(Tango::OPERATOR);
+	//	Not Memorized
+	att_list.push_back(shuttermin);
+
+	//	Attribute : shutterMax
+	shutterMaxAttrib	*shuttermax = new shutterMaxAttrib();
+	Tango::UserDefaultAttrProp	shuttermax_prop;
+	//	description	not set for shutterMax
+	//	label	not set for shutterMax
+	//	unit	not set for shutterMax
+	//	standard_unit	not set for shutterMax
+	//	display_unit	not set for shutterMax
+	//	format	not set for shutterMax
+	//	max_value	not set for shutterMax
+	//	min_value	not set for shutterMax
+	//	max_alarm	not set for shutterMax
+	//	min_alarm	not set for shutterMax
+	//	max_warning	not set for shutterMax
+	//	min_warning	not set for shutterMax
+	//	delta_t	not set for shutterMax
+	//	delta_val	not set for shutterMax
+	
+	shuttermax->set_default_properties(shuttermax_prop);
+	//	Not Polled
+	shuttermax->set_disp_level(Tango::OPERATOR);
+	//	Not Memorized
+	att_list.push_back(shuttermax);
 
 	//	Attribute : imageEncodedJpeg
 	imageEncodedJpegAttrib	*imageencodedjpeg = new imageEncodedJpegAttrib();
@@ -1215,6 +1521,15 @@ void CcdCameraChameleonClass::command_factory()
 			"",
 			Tango::OPERATOR);
 	command_list.push_back(ppauseCmd);
+
+	//	Command setExposure
+	setExposureClass	*psetExposureCmd =
+		new setExposureClass("setExposure",
+			Tango::DEV_VOID, Tango::DEV_VOID,
+			"",
+			"",
+			Tango::OPERATOR);
+	command_list.push_back(psetExposureCmd);
 
 	/*----- PROTECTED REGION ID(CcdCameraChameleonClass::command_factory_after) ENABLED START -----*/
 	

@@ -102,6 +102,18 @@ public:
 	Tango::DevLong	*attr_quality_read;
 	Tango::DevDouble	*attr_phi_read;
 	Tango::DevDouble	*attr_scale_read;
+	Tango::DevDouble	*attr_frameRateMin_read;
+	Tango::DevDouble	*attr_frameRateMax_read;
+	Tango::DevDouble	*attr_exposureMin_read;
+	Tango::DevDouble	*attr_exposureMax_read;
+	Tango::DevDouble	*attr_brightnessMin_read;
+	Tango::DevDouble	*attr_brightnessMax_read;
+	Tango::DevDouble	*attr_gammaMin_read;
+	Tango::DevDouble	*attr_gammaMax_read;
+	Tango::DevDouble	*attr_gainMin_read;
+	Tango::DevDouble	*attr_gainMax_read;
+	Tango::DevDouble	*attr_shutterMin_read;
+	Tango::DevDouble	*attr_shutterMax_read;
 	Tango::DevUChar	*attr_imageEncodedJpeg_read;
 	Tango::DevUChar	*attr_fullImage_read;
 
@@ -425,6 +437,114 @@ public:
 	virtual void write_scale(Tango::WAttribute &attr);
 	virtual bool is_scale_allowed(Tango::AttReqType type);
 /**
+ *	Attribute frameRateMin related methods
+ *	Description: 
+ *
+ *	Data type:	Tango::DevDouble
+ *	Attr type:	Scalar
+ */
+	virtual void read_frameRateMin(Tango::Attribute &attr);
+	virtual bool is_frameRateMin_allowed(Tango::AttReqType type);
+/**
+ *	Attribute frameRateMax related methods
+ *	Description: 
+ *
+ *	Data type:	Tango::DevDouble
+ *	Attr type:	Scalar
+ */
+	virtual void read_frameRateMax(Tango::Attribute &attr);
+	virtual bool is_frameRateMax_allowed(Tango::AttReqType type);
+/**
+ *	Attribute exposureMin related methods
+ *	Description: 
+ *
+ *	Data type:	Tango::DevDouble
+ *	Attr type:	Scalar
+ */
+	virtual void read_exposureMin(Tango::Attribute &attr);
+	virtual bool is_exposureMin_allowed(Tango::AttReqType type);
+/**
+ *	Attribute exposureMax related methods
+ *	Description: 
+ *
+ *	Data type:	Tango::DevDouble
+ *	Attr type:	Scalar
+ */
+	virtual void read_exposureMax(Tango::Attribute &attr);
+	virtual bool is_exposureMax_allowed(Tango::AttReqType type);
+/**
+ *	Attribute brightnessMin related methods
+ *	Description: 
+ *
+ *	Data type:	Tango::DevDouble
+ *	Attr type:	Scalar
+ */
+	virtual void read_brightnessMin(Tango::Attribute &attr);
+	virtual bool is_brightnessMin_allowed(Tango::AttReqType type);
+/**
+ *	Attribute brightnessMax related methods
+ *	Description: 
+ *
+ *	Data type:	Tango::DevDouble
+ *	Attr type:	Scalar
+ */
+	virtual void read_brightnessMax(Tango::Attribute &attr);
+	virtual bool is_brightnessMax_allowed(Tango::AttReqType type);
+/**
+ *	Attribute gammaMin related methods
+ *	Description: 
+ *
+ *	Data type:	Tango::DevDouble
+ *	Attr type:	Scalar
+ */
+	virtual void read_gammaMin(Tango::Attribute &attr);
+	virtual bool is_gammaMin_allowed(Tango::AttReqType type);
+/**
+ *	Attribute gammaMax related methods
+ *	Description: 
+ *
+ *	Data type:	Tango::DevDouble
+ *	Attr type:	Scalar
+ */
+	virtual void read_gammaMax(Tango::Attribute &attr);
+	virtual bool is_gammaMax_allowed(Tango::AttReqType type);
+/**
+ *	Attribute gainMin related methods
+ *	Description: 
+ *
+ *	Data type:	Tango::DevDouble
+ *	Attr type:	Scalar
+ */
+	virtual void read_gainMin(Tango::Attribute &attr);
+	virtual bool is_gainMin_allowed(Tango::AttReqType type);
+/**
+ *	Attribute gainMax related methods
+ *	Description: 
+ *
+ *	Data type:	Tango::DevDouble
+ *	Attr type:	Scalar
+ */
+	virtual void read_gainMax(Tango::Attribute &attr);
+	virtual bool is_gainMax_allowed(Tango::AttReqType type);
+/**
+ *	Attribute shutterMin related methods
+ *	Description: 
+ *
+ *	Data type:	Tango::DevDouble
+ *	Attr type:	Scalar
+ */
+	virtual void read_shutterMin(Tango::Attribute &attr);
+	virtual bool is_shutterMin_allowed(Tango::AttReqType type);
+/**
+ *	Attribute shutterMax related methods
+ *	Description: 
+ *
+ *	Data type:	Tango::DevDouble
+ *	Attr type:	Scalar
+ */
+	virtual void read_shutterMax(Tango::Attribute &attr);
+	virtual bool is_shutterMax_allowed(Tango::AttReqType type);
+/**
  *	Attribute imageEncodedJpeg related methods
  *	Description: 
  *
@@ -471,6 +591,13 @@ public:
 	 */
 	virtual void pause();
 	virtual bool is_pause_allowed(const CORBA::Any &any);
+	/**
+	 *	Command setExposure related method
+	 *	Description: 
+	 *
+	 */
+	virtual void set_exposure();
+	virtual bool is_setExposure_allowed(const CORBA::Any &any);
 
 
 	//--------------------------------------------------------
