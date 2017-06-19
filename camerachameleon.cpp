@@ -1200,15 +1200,19 @@ void CameraChameleon::autoExposure() {
 			double p0 = shutterMin;
 			newShutter = shutterMin;
 			newGain = 10.0 * log10(p1/p0);
-			if (newGain < gainMin)
+			if (newGain < gainMin) {
 				newGain = gainMin;
+				programAutoExposure = false;
+			}
 		} else if (newShutter > shutterMax) {
 			double p1 = newShutter;
 			double p0 = shutterMax;
 			newShutter = shutterMax;
 			newGain = 10.0 * log10(p1/p0);
-			if (newGain > gainMax)
+			if (newGain > gainMax) {
 				newGain = gainMax;
+				programAutoExposure = false;
+			}
 		}
 		this->setShutter(newShutter);
 		this->setGain(newGain);

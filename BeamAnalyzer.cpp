@@ -175,27 +175,31 @@ bool BeamAnalyzer::analyze() {
 	}
 
 	std::thread thread0_1(&BeamAnalyzer::subHalf, this, (int*)distributionX, width);
-	std::thread thread0_2(&BeamAnalyzer::subHalf, this, (int*)distributionY, height);
+	subHalf((int*)distributionY, height);
 
 	thread0_1.join();
-	thread0_2.join();
 
 	double sx, sy;
 
 	std::thread thread1(&BeamAnalyzer::getCenterMass, this, (int*)distributionX, width, &gaussCenterX);
 	std::thread thread2(&BeamAnalyzer::getCenterMass, this, (int*)distributionY, height, &gaussCenterY);
 	std::thread thread3(&BeamAnalyzer::getSigma, this, (int*)distributionX, width, &sx);
-	std::thread thread4(&BeamAnalyzer::getSigma, this, (int*)distributionY, height, &sy);
+	getSigma((int*)distributionY, height, &sy);
+
 	thread1.join();
 	thread2.join();
 	thread3.join();
-	thread4.join();
 
-	int imSize = std::min(width, height);
-
-	if ((double)(4 * sx) > (double)imSize * 0.9 || (double)(4 * sy) > (double)imSize * 0.9) {
+	double _amp = (double)((int)data[width * (int)gaussCenterY + gaussCenterX]);
+	double _back = constComponent + xLinearComponent * gaussCenterX
+			+ yLinearComponent * gaussCenterY;
+	if (fabs(_amp - _back) < 30) {
+		gaussAmplitude = 0;
 		gaussCenterX = 0;
 		gaussCenterY = 0;
+		gaussSigmaX = 0;
+		gaussSigmaY = 0;
+		gaussAngle = 0;
 		return false;
 	}
 

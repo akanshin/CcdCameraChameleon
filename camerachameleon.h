@@ -138,7 +138,7 @@ private:
 	/** Program Auto Exposure **/
 
 	bool programAutoExposure = true;
-	double autoExposureValue = 210.0;
+	double autoExposureValue = 240.0;
 
 	std::vector<double> ampValuesExposure;
 
