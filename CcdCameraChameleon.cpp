@@ -286,19 +286,17 @@ void CcdCameraChameleon::init_device()
 	/*----- PROTECTED REGION ID(CcdCameraChameleon::init_device) ENABLED START -----*/
 	
 	//	Initialize device
-	imageSize = 1228800;
-
 	camera = new CameraChameleon(serialNumber[0]);
 	camera->setTangoDeviceClass(this);
 
 	if (!camera->getRunStatus()) {
 		std::cout << "Failed to initialize device." << std::endl;
 		set_state(Tango::FAULT);
-		set_status("Camera has not connected");
+		set_status("not connected");
 	}
 
     set_state(Tango::RUNNING);
-    set_status("Camera has connected");
+	set_status("connected");
 
 
 	

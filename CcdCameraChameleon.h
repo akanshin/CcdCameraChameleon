@@ -64,8 +64,7 @@ class CcdCameraChameleon : public TANGO_BASE_CLASS
 /*----- PROTECTED REGION ID(CcdCameraChameleon::Data Members) ENABLED START -----*/
 
 //	Add your own data members
-    CameraChameleon* camera;
-    int imageSize = 0;
+	CameraChameleon* camera;
 
 /*----- PROTECTED REGION END -----*/	//	CcdCameraChameleon::Data Members
 

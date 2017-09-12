@@ -28,27 +28,11 @@ protected:
 	double gaussSigmaY = 0;
 	double gaussAngle = 0;
 
-
-protected:
 	int filterRadius = 10;
 
 	double constComponent = 0;
 	double xLinearComponent = 0;
 	double yLinearComponent = 0;
-
-	long long medianTime = 0;
-	long long linearEvaluationTime = 0;
-	long long centerMassTime = 0;
-	long long gaussFittingTime = 0;
-	long long fitEllipseTime = 0;
-	long long fullTime = 0;
-
-	long long time1 = 0;
-	long long time2 = 0;
-	long long time3 = 0;
-	long long time4 = 0;
-	long long time5 = 0;
-
 
 	double ampValues[4];
 	double ampErrors[4];
@@ -78,12 +62,7 @@ public:
 	double getGaussSigmaY() const;
 	double getGaussAngle() const;
 
-	void printTimeInfo();
-
-	friend std::ostream& operator << (std::ofstream&, BeamAnalyzer&);
-
 	int getWidth() const;
-
 	int getHeight() const;
 
 	void resizeImage(double scale, unsigned char **res, int* res_width, int* res_height);
@@ -119,7 +98,5 @@ protected:
 
 	long long mtime();
 };
-
-std::ostream& operator << (std::ofstream&, BeamAnalyzer&);
 
 #endif // BEAMANALYZER_H

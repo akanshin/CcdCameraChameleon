@@ -81,19 +81,10 @@ bool BeamAnalyzer::analyze() {
 		return false;
 	}
 
-	long long tStartFull, tEndFull;
-	long long tStart, tEnd;
-
-	/** MEDIAN FILTER **/
-	tStart = mtime();
-	tStartFull = tStart;
 	filtered = new unsigned char[width * height];
 	memcpy(filtered, data, width * height);
-	tEnd = mtime();
-	medianTime = tEnd - tStart;
 
 	/** PLANE EVALUATING **/
-	tStart = mtime();
 	FuncPoint p1;
 	p1.x = 0;
 	p1.y = 0;
@@ -147,12 +138,7 @@ bool BeamAnalyzer::analyze() {
 	xLinearComponent = A;
 	yLinearComponent = B;
 
-	tEnd = mtime();
-	linearEvaluationTime = tEnd - tStart;
-
 	/** CENTER MASS **/
-	tStart = mtime();
-
 	distributionX = new int[width];
 	distributionY = new int[height];
 
@@ -190,7 +176,7 @@ bool BeamAnalyzer::analyze() {
 	thread2.join();
 	thread3.join();
 
-	double _amp = (double)((int)data[width * (int)gaussCenterY + gaussCenterX]);
+	double _amp = (double)((int)data[width * (int)gaussCenterY + (int)gaussCenterX]);
 	double _back = constComponent + xLinearComponent * gaussCenterX
 			+ yLinearComponent * gaussCenterY;
 	if (fabs(_amp - _back) < 30) {
@@ -203,12 +189,7 @@ bool BeamAnalyzer::analyze() {
 		return false;
 	}
 
-	tEnd = mtime();
-	centerMassTime = tEnd - tStart;
-
 	/** GAUSS FITTING **/
-	tStart = mtime();
-
 	double sigma = std::fmax(4 * sx, 4 * sy);
 
 	std::vector<double> x[4], y[4];
@@ -354,8 +335,7 @@ bool BeamAnalyzer::analyze() {
 		}
 	}
 	if (y[0].size() < 4 || y[1].size() < 4 || y[2].size() < 4 || y[3].size() < 4) {
-		tEnd = mtime();
-		gaussFittingTime = tEnd - tStart;
+
 		return false;
 	}
 
@@ -368,11 +348,10 @@ bool BeamAnalyzer::analyze() {
 	std::thread thread5(&BeamAnalyzer::solveGauss, this, x[0], y[0], cComp, xl, 0.0, init_amp, init_sigma, ampValues+0, sigmaValues+0, ampErrors+0, sigmaErrors+0);
 	std::thread thread6(&BeamAnalyzer::solveGauss, this, x[1], y[1], cComp, 0.0, yl, init_amp, init_sigma, ampValues+1, sigmaValues+1, ampErrors+1, sigmaErrors+1);
 	std::thread thread7(&BeamAnalyzer::solveGauss, this, x[2], y[2], cComp, xl, yl, init_amp, init_sigma, ampValues+2, sigmaValues+2, ampErrors+2, sigmaErrors+2);
-	std::thread thread8(&BeamAnalyzer::solveGauss, this, x[3], y[3], cComp, xl, -yl, init_amp, init_sigma, ampValues+3, sigmaValues+3, ampErrors+3, sigmaErrors+3);
+	solveGauss(x[3], y[3], cComp, xl, -yl, init_amp, init_sigma, ampValues+3, sigmaValues+3, ampErrors+3, sigmaErrors+3);
 	thread5.join();
 	thread6.join();
 	thread7.join();
-	thread8.join();
 
 	gaussAmplitude = ampValues[0];
 	gaussAmplitude += ampValues[1];
@@ -380,12 +359,8 @@ bool BeamAnalyzer::analyze() {
 	gaussAmplitude += ampValues[3];
 	gaussAmplitude /= 4.0;
 
-	tEnd = mtime();
-	gaussFittingTime = tEnd - tStart;
 
 	/** FIT ELLIPSE **/
-	tStart = mtime();
-
 	std::vector<cv::Point> contour;
 	cv::Point p[8];
 
@@ -421,12 +396,6 @@ bool BeamAnalyzer::analyze() {
 	gaussSigmaX = (double)box.size.width / 2.0;
 	gaussSigmaY = (double)box.size.height / 2.0;
 	gaussAngle = box.angle;
-
-	tEnd = mtime();
-	tEndFull = tEnd;
-
-	fitEllipseTime = tEnd - tStart;
-	fullTime = tEndFull - tStartFull;
 
 	return true;
 }
@@ -689,12 +658,6 @@ void BeamAnalyzer::solveGauss(std::vector<double> data_x, std::vector<double> da
 	gsl_rng_free (r);
 }
 
-
-
-
-
-
-
 unsigned char *BeamAnalyzer::getData() const {
 	return data;
 }
@@ -754,64 +717,6 @@ double BeamAnalyzer::getGaussSigmaY() const  {
 double BeamAnalyzer::getGaussAngle() const {
 	return gaussAngle;
 }
-
-void BeamAnalyzer::printTimeInfo() {
-	cout << "########################" << endl;
-	cout << "Time result:" << endl;
-	cout << "\tmedianTime = " << medianTime << endl;
-	cout << "\tlinearEvaluationTime = " << linearEvaluationTime << endl;
-	cout << "\tcenterMassTime = " << centerMassTime << endl;
-	cout << "\tgaussFittingTime = " << gaussFittingTime << endl;
-	cout << "\tfitEllipseTime = " << fitEllipseTime << endl;
-	cout << " fullTime = " << fullTime << endl;
-	cout << "\ttime1 = " << time1 << endl;
-	cout << "\ttime2 = " << time2 << endl;
-	cout << "\ttime3 = " << time3 << endl;
-	cout << "\ttime4 = " << time4 << endl;
-
-	cout << "-----------" << endl;
-	cout << "c = " << constComponent << endl;\
-	cout << "xl = " << xLinearComponent << endl;
-	cout << "yl = " << yLinearComponent << endl;
-	cout << "amp = " << gaussAmplitude << endl;
-	cout << "cx = " << gaussCenterX << endl;
-	cout << "cy = " << gaussCenterY << endl;
-	cout << "sx = " << gaussSigmaX << endl;
-	cout << "sy = " << gaussSigmaY << endl;
-	cout << "angle = " << gaussAngle - 90<< endl;
-	cout << "----------" << endl;
-	for (int i = 0; i < 4; i++) {
-		cout << "amp[" << i << "] = " << ampValues[i] << " +/- " << ampErrors[i] << "\t";
-		cout << "sigma[" << i << "] = " << sigmaValues[i] << " +/- " << sigmaErrors[i] << endl;
-	}
-}
-
-std::ostream& operator << (ofstream &_fout, BeamAnalyzer &ba) {
-	_fout << "Time result:" << endl;
-	_fout << "\tmedianTime = " << ba.medianTime << endl;
-	_fout << "\tlinearEvaluationTime = " << ba.linearEvaluationTime << endl;
-	_fout << "\tcenterMassTime = " << ba.centerMassTime << endl;
-	_fout << "\tgaussFittingTime = " << ba.gaussFittingTime << endl;
-	_fout << "\tfitEllipseTime = " << ba.fitEllipseTime << endl;
-	_fout << " fullTime = " << ba.fullTime << endl << endl;
-	_fout << "-----------" << endl;
-	_fout << "c = " << ba.constComponent << endl;
-	_fout << "xl = " << ba.xLinearComponent << endl;
-	_fout << "yl = " << ba.yLinearComponent << endl;
-	_fout << "amp = " << ba.gaussAmplitude << endl;
-	_fout << "cx = " << ba.gaussCenterX << endl;
-	_fout << "cy = " << ba.gaussCenterY << endl;
-	_fout << "sx = " << ba.gaussSigmaX << endl;
-	_fout << "sy = " << ba.gaussSigmaY << endl;
-	_fout << "angle = " << ba.gaussAngle << endl;
-	_fout << "----------" << endl;
-	for (int i = 0; i < 4; i++) {
-		_fout << "amp[" << i << "] = " << ba.ampValues[i] << " +/- " << ba.ampErrors[i] << "\t";
-		_fout << "sigma[" << i << "] = " << ba.sigmaValues[i] << " +/- " << ba.sigmaErrors[i] << endl;
-	}
-	return _fout;
-}
-
 
 void BeamAnalyzer::resizeImage(double scale, unsigned char **res, int* res_width, int* res_height) {
 

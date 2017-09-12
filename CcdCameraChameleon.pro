@@ -28,7 +28,6 @@ LIBS += /usr/local/lib/libopencv_imgproc.so \
     /usr/local/lib/libgsl.so \
     /usr/local/lib/libgslcblas.so \
     -lm \
-    /usr/local/lib/libtango.so \
     /usr/local/lib/liblog4tango.so \
     /usr/lib/libomniDynamic4.so \
     -pthread \

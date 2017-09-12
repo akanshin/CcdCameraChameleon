@@ -22,16 +22,7 @@ class CameraChameleon
 {
 private:
     /** Bus manager. Used for registering and unregistering callbacks.*/
-    BusManager m_busMgr;
-
-    /** Camera arrival callback handle. */
-    CallbackHandle m_cbArrivalHandle;
-
-    /** Camera removal callback handle. */
-    CallbackHandle m_cbRemovalHandle;
-
-    /** Bus reset callback handle. */
-    CallbackHandle m_cbResetHandle;
+	BusManager m_busMgr;
 
     /** Camera object. */
     CameraBase* m_pCamera;
@@ -40,11 +31,7 @@ private:
     CameraInfo m_camInfo;
 
     /** The raw image returned from the camera. */
-    Image m_rawImage;
-    bool newImage = false;
-
-
-
+	Image m_rawImage;
 
 	/** Camera parameters **/
 	double frameRate, frameRateMin, frameRateMax;
@@ -65,10 +52,7 @@ private:
     void imageProcessing();
 	void encoding(unsigned char *in_data, int in_width, int in_height, std::vector<unsigned char> *out);
     int quality;
-    std::mutex newImageMutex;
-
-    std::string filename = "test";
-    std::string format = ".jpg";
+	std::mutex newImageMutex;
 
     bool b = true;
 
@@ -103,12 +87,12 @@ private:
     unsigned int m_dataSize;
 
     /** Bytes per pixel. */
-    float m_bytesPerPixel;
+	float m_bytesPerPixel;
 
-    /** Whether the grab thread should keep running. */
-    bool m_run;
+	/** Whether the grab thread should keep running. */
+	bool m_run;
 
-    bool m_cameraPaused;
+	bool cameraPauseFlag;
     std::mutex playMutex;
 
     Format7ImageSettings imageSettings;

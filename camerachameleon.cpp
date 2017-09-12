@@ -19,7 +19,7 @@ CameraChameleon::CameraChameleon(int serialNumber)
 {
     m_pCamera = NULL;
     m_run = false;
-    m_cameraPaused = false;
+	cameraPauseFlag = false;
 
     m_imageWidth = 0;
     m_imageHeight = 0;
@@ -162,7 +162,7 @@ bool CameraChameleon::start(int serialNumber) {
 bool CameraChameleon::reconnect() {
 	setRunStatus(false);
     imageMutex->lock();
-    m_cameraPaused = true;
+	cameraPauseFlag = true;
     imageMutex->unlock();
 	std::cout << "Reconnecting";
     std::cout.flush();
@@ -174,7 +174,7 @@ bool CameraChameleon::reconnect() {
         i++;
     }
     imageMutex->lock();
-    m_cameraPaused = false;
+	cameraPauseFlag = false;
     imageMutex->unlock();
     std::cout << endl;
     return true;
@@ -183,7 +183,7 @@ bool CameraChameleon::reconnect() {
 bool CameraChameleon::waitingConnect() {
 	setRunStatus(false);
 	imageMutex->lock();
-	m_cameraPaused = true;
+	cameraPauseFlag = true;
 	imageMutex->unlock();
 	std::cout << "Waiting for connection\n";
 	std::cout.flush();
@@ -191,7 +191,7 @@ bool CameraChameleon::waitingConnect() {
 		sleep(1);
 	}
 	imageMutex->lock();
-	m_cameraPaused = false;
+	cameraPauseFlag = false;
 	imageMutex->unlock();
 	std::cout << endl;
 	return true;
@@ -222,15 +222,15 @@ bool CameraChameleon::stop() {
 void CameraChameleon::play() {
 	if (!this->getRunStatus()) {
 		this->start(this->serialNumber);
-        playMutex.unlock();
-        m_cameraPaused = false;
+		cameraPauseFlag = false;
+		playMutex.unlock();
     }
 }
 void CameraChameleon::pause() {
 	if (this->getRunStatus()) {
         playMutex.lock();
 		this->stop();
-        m_cameraPaused = true;
+		cameraPauseFlag = true;
     }
 }
 
@@ -246,7 +246,7 @@ bool CameraChameleon::getImage(unsigned char** image, int* size) {
     //newImageMutex.lock();
 
     swapMutex.lock();
-    if(m_cameraPaused) {
+	if(cameraPauseFlag) {
         swapMutex.unlock();
         return false;
     }
@@ -293,7 +293,7 @@ void CameraChameleon::swapBuffers() {
 int CameraChameleon::getImageWidth() {
     int result;
     swapMutex.lock();
-    if(m_cameraPaused) {
+	if(cameraPauseFlag) {
         swapMutex.unlock();
         return 0;
     }
@@ -305,7 +305,7 @@ int CameraChameleon::getImageWidth() {
 int CameraChameleon::getImageHeight() {
     int result;
     swapMutex.lock();
-    if(m_cameraPaused) {
+	if(cameraPauseFlag) {
         swapMutex.unlock();
         return 0;
     }
@@ -317,9 +317,6 @@ int CameraChameleon::getImageHeight() {
 
 
 void CameraChameleon::run() {
-//    long long t1, t2;
-//    t1 = mtime();
-//    t2 = t1;
     while (true) {
 		playMutex.lock();
 
@@ -343,7 +340,7 @@ void CameraChameleon::run() {
                 cout << "Failed to get image" << endl;
             }
 
-            m_cameraPaused = true;
+			cameraPauseFlag = true;
 			processing.join();
             imageMutex->unlock();
             playMutex.unlock();
@@ -359,15 +356,10 @@ void CameraChameleon::run() {
 		}
 
 		imageMutex->lock();
-        m_rawImage = tempImage;
-        newImage = true;
+		m_rawImage = tempImage;
         imageMutex->unlock();
 
-        playMutex.unlock();
-
-//        t1 = mtime();
-//        float fps = 1000.0 / (float)(t1-t2);
-//        t2 = t1;
+		playMutex.unlock();
     }
 }
 
